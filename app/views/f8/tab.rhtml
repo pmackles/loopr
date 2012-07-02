@@ -1,0 +1,127 @@
+<style>
+
+h2 { background-color:#D8DFEA; border-top:1px solid #3B5998; color:#3B5998; font-size:11px; padding:1px 6px; margin:0; font-weight:bold; } 
+
+	.plainListNoIndent li {
+	  margin-top: 5px;
+	  padding-top: 3px;
+	  padding-left: 5px;
+	}
+	
+	.plainListNoIndent {
+	  list-style-type: none;
+	  margin-left: 0px;
+	  padding-left: 0px;
+	  margin-top: 0px;
+	}
+	
+	.start-quote {
+	  background: url(http://www.loopr.com/images/start_quote.gif) no-repeat left 2px;
+	  color:#464646;
+	  margin-top:6px;
+	  padding-left: 23px;
+	  display: block;
+	  margin-bottom: 5px;
+	}
+
+	.round-headline-separator {
+	  border-top: 1px dashed #ccc; 
+	}
+
+</style>
+
+<div>
+
+<div style="margin-bottom: 10px">
+	Play golf? <a href="http://<%= FACEBOOK_DEFAULT_URL_OPTIONS[:host] %>/">Add a Golf tab to your profile</a>
+</div>
+
+	<div style="float: left; width: 250px">
+		<div style="margin-bottom: 25px">
+			<h2>Stats</h2>
+			<table style="width: 245px">
+				<tr>
+					<td>Handicap:</td>
+					<td style="text-align: right">
+						<% if @stats.handicap %>
+							<a href="<%= handicap_url(@user) %>"><%= @stats.handicap %></a>
+						<% else %>
+							-
+						<% end %>
+					</td>
+				</tr>
+  			<% [[Metric.total_rounds, @lifetime_stats.total_rounds_formatted],
+  					[Metric.total_holes, @lifetime_stats.total_holes_formatted],
+  					[Metric.total_strokes, @lifetime_stats.total_strokes_formatted],
+  					[Metric.total_birdies, @lifetime_stats.total_birdies_formatted],
+  					[Metric.total_pars, @lifetime_stats.total_pars_formatted],
+  					[Metric.total_bogeys, @lifetime_stats.total_bogeys_formatted],
+  					[Metric.total_dbl_bogeys, @lifetime_stats.total_dbl_bogeys_formatted],
+  					[Metric.total_others, @lifetime_stats.total_others_formatted]].each do |s| %>
+					<tr>
+						<td><%= s.first.label %>:</td>
+						<td style="text-align: right">
+							<%= s.last || "-" %>
+						<td>
+	  			</tr>
+  			<% end %>
+			</table>
+			<div style="text-align: right">
+				<a href="<%= stats_url(@user.id) %>">All stats</a>
+			</div>
+		</div>
+		<div>
+			<h2>Courses</h2>
+			<% if @courses.any? %>
+				<%= pluralize @courses.size, "courses" %>
+			<% else %>
+				no courses yet
+			<% end %>
+			<ul class="plainListNoIndent">
+				<% @courses[0..10].each do |c| %>
+					<li>
+						<a href="<%= course_url(c) %>"><%= c.short_name %></a><br />
+						<span style="font-size: 10px; color: #777777"><%= c.address.to_formatted_s :really_short %></span>
+					</li>
+				<% end %>
+			</ul>
+			<div style="text-align: right">
+				<a href="<%= user_courses_url(@user) %>">All courses</a>
+			</div>
+		</div>
+	</div>
+	
+	<div style="float: left; width: 250px; margin-left: 20px">
+		<ul>
+			<li style="margin-bottom: 15px;">
+				<h2>Most Recent Rounds</h2>
+				<% if @rounds.any? %>
+					<ul class="plainListNoIndent">
+						<% @rounds.each_with_index do |r,i| %>
+							<li class="<%= "round-headline-separator" unless i == 0 %>">
+								<a href="<%= round_url(r) %>"><%= r.total_score %></a> 
+								at <a href="<%= course_url(:id => r.course_id, :name => r.course_name) %>"><%= r.course_name %></a><br />
+								<% unless r.comments.blank? %>
+									<span class="start-quote" style="font-size: 10px">
+										<span class="end-quote"><%= sanitize(r.comments)  %></span>
+									</span>
+								<% end %>
+								<span style="font-size: 10px; color: #777777">posted <%= r.created_on.to_formatted_s :Beyyyy %></span>
+							</li>
+						<% end %>
+					</ul>
+				<% else %>
+					no rounds yet
+				<% end %>
+				<div style="text-align: right">
+					<a href="<%= blog_url(@user.id) %>">All rounds</a>
+				</div>
+			</li>
+		</ul>
+	</div>
+	
+</div>
+
+
+	
+	

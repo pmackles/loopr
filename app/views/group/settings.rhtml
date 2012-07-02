@@ -1,0 +1,25 @@
+<% title @group.name + ": Settings" %>
+<% current_tab "settings" %>
+
+<h2>Group Settings</h2>
+
+<div class="subSection">
+<table>
+	<tr>
+		<td style="width: 150px"><%= link_to "Edit Basic Info", :action => :edit_profile, :id => @group %></td>
+		<td>Update the name and description for this group.</td>
+	</tr>
+	<tr>
+		<td><%= link_to "Edit Icon", :action => :edit_icon, :id => @group %></td>
+		<td>Update the icon used for this group.</td>
+	</tr>
+	<tr>
+		<td><%= link_to "Edit Members", :action => :edit_membership, :id => @group %></td>
+		<td>Add new admins and remove users.</td>
+	</tr>
+	<tr>
+		<td><%= link_to "Invite New Members", :action => :invite, :id => @group %></td>
+		<td>Send an email to friends inviting them to join your group.</td>
+	</tr>
+</table>
+</div>

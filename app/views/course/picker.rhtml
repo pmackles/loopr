@@ -1,0 +1,64 @@
+<% if guest_user? %>
+	<div style="padding: 1em; width: 400px;" id="course-picker">
+		<%= link_to_function image_tag("close_button.gif"), "RedBox.close()", :id => "RB_close" %>
+		<h2>There is a Problem</h2>
+		<p>
+		Sorry, we are unable to let you post scores at this time. It appears as though your browser is not
+		accepting our cookies. Safari users, this is a known issue that we are trying to work around. Everybody
+		else, please check your privacy settings and make sure that you are able to accept cookies from loopr.com.
+		</p>
+	</div>
+<% else %>
+
+	<div style="padding: 1em; width: 400px;" id="course-picker">
+		<%= link_to_function image_tag("close_button.gif"), "RedBox.close()", :id => "RB_close" %>
+		<h2>Select Course</h2>
+		
+		
+		<p>
+			<% if params[:qp] != "0" %>
+				Get started on posting your round by telling us where you played.
+			<% else %>
+				Add any course from our 20,000+ course database to your course list.
+			<% end %>
+		</p>
+		
+		<% if @saved_courses.any? %>
+			<p>Pick from previously played courses:</p>
+			
+			<%= select('course', 'idnnn', @saved_courses.collect {|c| [ c.name, c.id ] }, :prompt => 'Please Select') %>
+			
+			<p>or type <b>any</b> word from the name of the course below:</p>
+		<% else %>
+			<p>Type <b>any</b> word from the name of the course below:</p>		
+		<% end %>
+		
+		<%= text_field :course, :name, :size => 40, :autocomplete => 'off' %>
+		<div id="results">
+			<%= render :partial => 'courses' %>
+		</div>
+		
+		<p>
+			Can't find your course? Just drop us a note at feedback@loopr.com with
+			the name of your course and we'll get it added for you - usually within
+			24 hours.
+		</p>
+	</div>
+	    
+	<%= observe_field(:course_name, :frequency => 0.75, :with => 'xxx',
+			:update => :results,
+			:url => { :action => 'auto_complete_for_course_name', 
+					  :controller => 'course',
+					  :cb => 'changeCourse'
+	    }) %>
+	
+	<script>
+	  if ($('course_idnnn')) {
+	  	$('course_idnnn').onchange = function() {
+	    	<%= h params[:cb] %>(this.getValue());
+	    	RedBox.close();
+	  	}
+	  }
+	</script>
+
+<% end %>

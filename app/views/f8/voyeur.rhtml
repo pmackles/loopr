@@ -1,0 +1,68 @@
+<% current_channel "community" %>
+<% content_for :title do %>Golf Game - Community<% end %>
+
+<div style="float: right; width: 175px; border-left: 1px solid #eee;">
+	
+	<div style="margin-bottom: 15px">
+		<div class="header">
+			<h2>Community Stats</h2>
+		</div>
+		<div style="margin-top: 5px; padding: 2px 8px">
+			<ul class="plainList">
+				<li><b>Rounds Posted</b>: <%= number_with_delimiter @gstats.rounds_played %></li>
+				<li><b>Holes Played</b>: <%= number_with_delimiter @gstats.total_holes %></li>
+				<li><b>Strokes</b>: <%= number_with_delimiter @gstats.total_strokes %></li>
+				<li><b>Avg 18-Hole Score</b>: <%= @gstats.scoring_average %></li>
+				<li><b>Bogies</b>: <%= number_with_delimiter @gstats.total_bogeys %></li>
+				<li><b>Pars</b>: <%= number_with_delimiter @gstats.total_pars %></li>
+				<li><b>Birdies</b>: <%= number_with_delimiter @gstats.total_birdies %></li>
+				<li><b>Eagles</b>: <%= number_with_delimiter @gstats.total_eagles %></li>
+				<li><b>Holes-in-one</b>: <%= number_with_delimiter @gstats.total_ones %></li>
+			</ul>
+		</div>
+	</div>
+	
+</div>
+
+<div style="width: 400px">
+	
+	<div style="margin-bottom: 15px">
+		Some recently posted scores from around the world
+	</div>
+	
+	<ul class="plainList">
+		<% @rounds.each_with_index do |r,i| %>
+		
+
+			<li class="round-headline <%= "round-headline-separator" unless i == 0 %>" style="padding-right: 15px">
+				<div style="float: right">
+										<%= image_tag "flags/#{r.country.downcase}.gif", 
+								  :alt =>  Geography::COUNTRIES[r.country] %>
+				</div>
+				
+				<div style="float: left; margin-right: 10px;">
+						<%= link_to(fb_profile_pic(r), "http://www.facebook.com/profile.php?id=#{r.facebook_id}") %>
+				</div>
+
+				<div style="margin-left: 60px;">
+
+					<div style="font-size: 24px; font-weight: bold">
+						<%= link_to_unless r.facebook_id.nil?, r.total_score, round_url(:id => r) %>
+					</div>
+
+					<strong>Posted by:</strong> 
+					<%= link_to_unless r.facebook_id.nil?, fb_name(r), "http://www.facebook.com/profile.php?id=#{r.facebook_id}" %>
+					<br />
+					<strong>Course:</strong> <%= r.name %>
+
+					<% unless r.comments.blank? %>
+						<span class="start-quote">
+							<span class="end-quote"><%= sanitize(r.comments)  %></span>
+						</span>
+					<% end %>
+				</div>
+				<br clear="left" />
+			</li>			 	
+		<% end %>
+	</ul>
+</div>

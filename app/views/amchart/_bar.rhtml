@@ -1,0 +1,14 @@
+<div id="flashcontent">
+	<strong>DOH! You need to upgrade your Flash Player</strong>
+</div>
+
+<script type="text/javascript">	
+	var so = new SWFObject("/amchart/amcolumn.swf", "amcolumn", "610", "250", "8", "#ffffff");
+	so.addVariable("path", "/amchart/");
+	so.addVariable("settings_file", escape("/amchart/amcolumn_settings.xml?" + new Date().getTime()));
+	so.addVariable("chart_data", <%= chart_data %>);
+	so.addVariable("preloader_color", "#999999");
+	so.write("flashcontent");
+</script>
+		
+

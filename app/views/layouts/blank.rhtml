@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+   
+<html>
+
+<%= render :partial => 'layouts/head' %>
+
+<body style="background-image: none; background-color: white; margin-top: 5px;">
+   <div id="title">
+   	<h1>
+   		<% @breadcrumb.each_with_index { |n, i| %>
+   			<%= "/" unless i == 0 %>
+   				<% if n[:url] %>
+   				<%= link_to_unless_current n[:label], n[:url] %>
+   			<% else %>
+   				<%= n[:label] %>
+   			<% end %>
+   		<% } %>
+   	</h1>
+  </div>
+  
+  <div>
+    <%= @content_for_layout %>
+  </div>
+  
+</body>
+</html>

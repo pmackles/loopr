@@ -1,0 +1,22 @@
+<% title "Cities: #{@subdivision}" %>
+<% description "Cities in #{@subdivision}  with golf courses" %>
+
+<%
+  @breadcrumb = [{ :label => "Golf Courses By City: #{@subdivision}" }]
+  @description = "Golf course guide and directory for #{@subdivision}"
+  @keywords = "#{@subdivision} course guide, #{@subdivision} course directory, #{@subdivision} course listing, #{@subdivision} golf, #{@subdivision} courses"
+%>
+
+<div style="margin-bottom: 15px">
+Cities in <%= @subdivision %>  with golf courses.
+</div>
+
+<% @groupings.keys.sort.each do |letter| %>
+	<p>
+	<h4><%= letter %></h4>
+	<% @groupings[letter].sort.each_with_index do |c,i| -%>
+		<%= " <b>&middot;</b> " unless i == 0 %>
+		<%= link_to_unless_current(c, courses_browse_url(:region => @region.name, :subdivision => @subdivision, :city => c)) %>
+	<% end -%>
+	</p>
+<% end %>

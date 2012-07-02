@@ -1,0 +1,57 @@
+
+
+<div style="width: 350px;">
+  <ul style="list-style: none; padding: 0px; margin: 0px">
+	<li>
+	   Handicapping
+	   <ul>
+	     <li><a href="#h1">Are your handicaps official?</a></li>
+	     <li><a href="#h2">What handicapping system do you use?</a></li>
+	     <li><a href="#h3">What about countries outside of North America?</a></li>
+	     <li><a href="#h4"><%= new_bug %> - What about 9 hole rounds?</a></li>
+	   </ul>
+	</li>
+  </ul>
+
+
+
+<p>
+<a name="h1"><b>Are your handicaps official?</b></a><br />
+Absolutely not. Our handicaps are for recreational purposes only. While they are good approximations, you'll need
+to join an association affiliated with your country's offical handicapping system in order to be assigned
+an official handicap for use in competitions. That said, you can definitely use it to level the playing
+field in friendly competitions.
+</p>
+
+<p>
+<a name="h2"><b>What handicapping system do you use?</b></a><br />
+We use pretty much the same formula as the USGA (US) and RCGA (Canada) described
+<a href="http://golf.about.com/cs/handicapping/a/howcalculated.htm">here</a> and
+<a href="http://en.wikipedia.org/wiki/Golf_handicap">here</a>. One major difference is that we
+won't make you post 5 scores before giving you a handicap (we're not patient). Obviously,
+none of this is endorsed by the USGA or RCGA in any way, shape or form.
+</p>
+
+<p>
+<a name="h3"><b>What about countries outside of North America?</b></a><br />
+Most countries have their own official handicapping system. LOOPR does not support every variation 
+of handicapping system in existence today. Instead, we apply the USGA formula for all users in all countries. 
+If you are outside of North America, that means the handicap calculated by LOOPR may be different 
+from your country's official handicap. We hope to support additional handicap systems over time. 
+Meanwhile, all of the other stats we track for you will be accurate and they are what you really need 
+to improve your game. Since the USGA handicap system is dependent on the course having a slope rating, we
+use the average of 113 for courses outside of North America that don't have a slope rating (which is most).
+If you have feedback on this approach, do please  
+<%= mail_to "feedback@loopr.com", "drop us a note", :encode => "javascript" %>.
+</p>
+
+<p>
+<a name="h4"><b><%= new_bug %> - What about 9 hole rounds?</b></a><br />
+Following USGA guidelines, LOOPR will combine 9 hole rounds for handicapping purposes. Just post 
+your 9 hole rounds like you would any other round. When 2 eligible  hole rounds are posted, they
+will be automatically combined (for handicapping purposes only). You can post as many 9-hole 
+rounds as you like.
+</p>
+
+
+</div>

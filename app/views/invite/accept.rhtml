@@ -1,0 +1,12 @@
+<% title "Accept Invite" %>
+
+<div class="dialog" id="login">
+
+	<% unless @invite.errors.empty? %>
+		<p class="instructions">
+		DOH! <%= @invite.errors.on_base %>
+		</p>
+	<% end %>
+</div>
+
+

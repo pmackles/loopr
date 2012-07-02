@@ -1,0 +1,29 @@
+<% title "Edit Icon" %>
+<% supress_ads %>
+
+<div id="columnLeft">
+	<%= render(:partial => 'settings_menu') %>
+</div>
+
+<div id="columnRight">
+	
+	<%= error_messages_for 'user' %>
+	
+	<p>
+	Here is your current icon:<br /><br />
+	<%= user_icon_large(@user.icon_url) %>
+	</p>
+		
+	<div>
+	<%= start_form_tag({:action => 'edit_icon'}, :multipart => true) %>
+	  <p>
+	    Upload a new icon below. You can upload jpg, gif or png images 
+	    up to 2MB in size. We will automatically scale whatever you 
+	    upload to 96x96 pixels:
+	  </p>
+	  <%= file_field_tag "file" %>
+	  <p><%= submit_tag "Upload" %></p>
+	<%= end_form_tag %>
+	</div>
+
+</div>

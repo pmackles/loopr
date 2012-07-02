@@ -1,0 +1,20 @@
+<%= error_messages_for 'group' %>
+
+<table border="0" cellspacing="5">
+	<tr>
+	  <td class="fieldLabel" align="right" nowrap>Name:</span></td>
+	  <td><%= text_field('group', 'name', :size => 40) %></td>
+	</tr>
+	
+	<tr>
+	  <td class="fieldLabel" valign="top" align="right" nowrap>Description:</td>
+	  <td><%= text_area('group', 'description', :cols => 40, :rows => 10) %></td>
+	</tr>
+	
+	<tr>
+	  <td></td>
+	  <td><%= submit_tag "Save" %></td>
+	</tr>
+</table>
+
+

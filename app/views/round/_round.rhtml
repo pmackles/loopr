@@ -1,0 +1,48 @@
+
+<div class="header">
+	<%= round.date_played.to_formatted_s :Beyyyy %>
+</div>
+
+<% unless show_course == false %>
+	<div style="margin: 0 0 8px 0 ;font-size: 12px">
+			<strong>Course</strong>: <%= link_to round.course.short_name, course_url(:id => round.course, :name => round.course.name) %><br />	
+		<!-- <strong>Holes</strong>: <%= round.total_holes %><br /> -->
+	</div>
+<% end %>
+
+<div class="score-container" >
+	<strong>Score</strong>
+	<div class="score""><%= link_to round.total_score, round_url(round) %></div>
+	<% if round.total_holes < 18 %>
+		<%= round.total_holes %> holes
+	<% end %>
+</div>
+
+<div class="info-container">
+	<% if show_user == true %>
+		<div style="float: left">
+			<%= user_icon_medium(round.user.icon_url) %>
+		</div>
+		<div style="margin-left: 58px;"
+			<strong>Posted by</strong>: <%= link_to display_name(round.user), :controller => :user, :action => :blog, :id => round.user %><br />
+	<% else %>
+		<div>
+	<% end %>
+	
+			<strong>Tees</strong>: <%= round.tee.to_formatted_s(round.course.length_units) %><br />
+			<strong>Course Handicap</strong>: <%= round.course_handicap %><br />
+			<strong>Net Score</strong>: <%= round.net_score || na %>
+
+			<br clear="right" />
+	
+			<% unless round.comments.nil? || round.comments.blank? %>
+				<span class="start-quote">
+					<span class="end-quote"><%= sanitize(round.comments)  %></span>
+				</span>
+			<% end %>
+		</div>
+</div>
+		
+
+
+

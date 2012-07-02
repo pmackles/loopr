@@ -1,0 +1,466 @@
+
+<div id="post-round-errors" class="errorBox" style="display: none"></div>
+<div id="submit-progress" class="progressBox" style="display: none">
+	<%= image_tag "indicator_kit.gif", :align => 'top', :width => '48', :height => '16' %> Saving...
+</div>
+
+<table cellspacing="5">
+
+<tr>
+  <td class="fieldLabel" nowrap>Course:</span></td>
+  <td>
+    <span id="course-name">
+    <% if @course %>
+    	<%= @course.name %> (<%= @course.city %>)
+    <% end %> 
+    </span>
+    <span id="course-change">
+	[<%= link_to_remote_redbox("Set", 
+							  :url => {
+							  	:controller => 'course',
+							  	:action => 'picker',
+							  	:cb => 'changeCourse',
+							  	:_session_id => session.session_id
+							  }
+							  ) %>]
+	</span>
+	<%= hidden_field :course, :id %>
+  </td>
+  
+</tr>
+
+<tr>
+  <td class="fieldLabel" nowrap>Date Played:</span></td>
+  <td>
+  	<%= date_select(:round, :date_played, :order => [:month, :day, :year], :end_year => 2012) %>
+  </td>
+</tr>
+
+<tr>
+	<td class="fieldLabel" valign="top" nowrap>Holes Played:</td>
+	<td>
+		<% score_types.each do |t| %>
+			<%= radio_button 'round', 'score_type', t.last %> <%= t.first %>
+		<% end %>
+	</td>
+</tr>
+
+
+<tr><td colspan="2">&nbsp;</td></tr>
+ 
+<tr>
+  <td class="fieldLabel">Tee Name:</td>
+  <td>
+    <%= text_field :round, :tee_name, :size => 6, :maxlength => 12 %>
+  	<span id="tee-autofill"></span>
+  </td>
+</tr>
+
+<tr>
+  <td class="fieldLabel">Tee Length:</td>
+  <td>
+    <%= text_field :round, :tee_yardage, :size => 4, :maxlength => 4 %>
+  	<span id="length-units"></span>
+  </td>
+</tr>
+
+
+
+<tr>
+  <td class="fieldLabel">Handicap:</td> 
+  <td>
+	<%= check_box :round, :count_towards_handicap, { :onclick => 'setRatingSlopeStatus()' } %>
+	Count this round towards my handicap
+  </td>
+</tr>
+
+<tbody id="rating_slope">
+	<tr>
+	  <td class="fieldLabel" valign="top">&nbsp</td> 
+	  <td>
+	  	<div style="color: #676767; font-size: 10px; margin-bottom: 5px" id="rating-help">
+	    	Rating is the same as ACR in Australia and SSS in the UK. Slope is only required for US and Canada but can
+	    	be entered for other countries if available. Both can usually be found on your scorecard.
+	    </div>
+	    
+	  	<span class="fieldLabel">Tee Rating:</span>
+	    <%= text_field :round, :tee_rating, :size => 4, :maxlength => 5 %>
+	    &nbsp;&nbsp;
+	    <span class="fieldLabel">Tee Slope:</span>
+	    <%= text_field :round, :tee_slope, :size => 4, :maxlength => 4 %>
+	    <br />
+	  </td>
+	</tr>
+
+</tbody>
+
+<tr><td colspan="2">&nbsp;</td></tr>
+
+<tr>
+  <td class="fieldLabel" valign="top" nowrap>Enter:</td>
+  <td>
+  	<%= radio_button 'round', 'details', '1' %> Hole by hole details
+  	<%= radio_button 'round', 'details', '0' %> Just a total
+  </td>
+</tr>
+ 
+ <tbody id="simple" style="display: none">
+  <tr>
+   <td class="fieldLabel" nowrap>Total:</td>
+   <td><%= text_field( 'round', 'total_score', :size => 3, :maxsize => 3) %></td>
+  <tr>
+ </tbody>
+
+
+ <tbody id="detailed" style="display: none">
+  <tr>
+
+	 <td class="fieldLabel" valign="top">Details:</td>
+   <td>
+  <table style="text-align: center;" class="grid">
+
+   <tr id="hole_numbers">
+    <td style="text-align: left;" class="fieldLabel">Hole</td>
+    <% for hole in 1..18 %>
+      <td class="fieldLabel score"><%= hole %></td>
+    <% end %>
+	<td class="fieldLabel">Out</td>
+	<td class="fieldLabel">In</td>
+    <td class="fieldLabel">Tot</td>
+   </tr>
+   
+  	<tbody id="scorecardEntry">
+     <tr>
+   	  <td class="fieldLabel">Par</td>
+      <%
+      	 for hole in 0..17
+         	@score = @scores[hole]
+      %>
+      	<td class="score">
+      		<%= text_field("score", "par", :index => hole,
+        	    		   :maxlength => '1', :autocomplete => 'off') %>
+      	</td>
+      <% end %>
+      <td class="score" id="score_out_par"></td>
+      <td class="score" id="score_in_par"></td>
+      <td class="score" id="score_total_par"></td>
+     </tr>    
+
+    <tr>
+      <td class="fieldLabel">Score</td>
+      <%
+      	 for hole in 0..17
+         	@score = @scores[hole]
+      %>
+        	<td class="score">
+        		<%= text_field("score", "score", :index => hole,
+        	    		       :maxlength => '2', :autocomplete => 'off') %>
+        	</td>
+      <% end %>
+      <td class="score" id="score_out_score"><%# @round.total_score(0..8) %></td>
+      <td class="score" id="score_in_score"><%# @round.total_score(9..17) %></td>
+      <td class="score" id="score_total_score"><%# @round.total_score %></td>
+    </tr>
+
+    <tr>
+      <td class="fieldLabel">Putts</td>
+      <%
+      	 for hole in 0..17
+         	@score = @scores[hole]
+      %>
+        	<td><%= text_field("score", "putts", :index => hole,
+        	           :maxlength => '1', :autocomplete => 'off') %></td>
+      <% end %>
+      <td class="score" id="score_out_putts"><%= @round.total_putts(0..8) %></td>
+      <td class="score" id="score_in_putts"><%= @round.total_putts(9..17) %></td>
+      <td class="score" id="score_total_putts"><%= @round.total_putts %></td>
+    </tr>
+    
+    <tr>
+      <td class="fieldLabel">Penalty</td>
+      <%
+      	 for hole in 0..17
+         	@score = @scores[hole]
+      %>
+        	<td><%= text_field("score", "penalty_strokes", :index => hole,
+        	           :maxlength => '1', :autocomplete => 'off') %></td>
+      <% end %>
+      <td class="score" id="score_out_penalty_strokes"><%= @round.total_penalty(0..8) %></td>
+      <td class="score" id="score_in_penalty_strokes"><%= @round.total_penalty(9..17) %></td>
+      <td class="score" id="score_total_penalty_strokes"><%= @round.total_penalty %></td>
+    </tr>
+
+    <tr>
+      <td class="fieldLabel">GIR</td>
+      <% (0..17).each do |h| @score = @scores[h] %>
+        	<td class="score" id="score_<%= h %>_gir">
+        		<% if @score.gir? %>
+							<%= image_tag 'checkmark.gif' %>
+						<% end %>
+        	</td>
+      <% end %>
+      <td class="score" id="score_out_gir"><%# @round.total_girs(0..8) %></td>
+      <td class="score" id="score_in_gir"><%# @round.total_girs(9..17) %></td>
+      <td class="score" id="score_total_gir"><%# @round.total_girs %></td>
+    </tr>
+
+    <tr>
+      <td class="fieldLabel" nowrap valign="top">Tee Shot<br /><em style="font-weight: normal; font-size: 9px">optional</em></td>
+      <% (0..17).each do |h| @score = @scores[h] %>
+      	<td style="padding: 0 0">
+      		<div id="score_tee_shot_<%= h %>" class="tee-shot-display"><%= tee_shot @score %></div>
+      		<%= render(:partial => 'scorecard/tee_shot_form', :locals => { :score => @score }) %>
+      	</td>
+      <% end %>
+      <td class="score" id=""></td>
+      <td class="score" id=""></td>
+      <td class="score" id=""></td>
+    </tr>
+
+    </tbody>
+  </table>
+  </td>
+  </tr> 
+ </tbody>
+ 
+ <tr><td colspan="2">&nbsp;</td></tr>
+  
+ <tr>
+  <td class="fieldLabel" valign="top"nowrap>Notes:</td>
+  <td><%= text_area('round', 'comments', "cols" => 60, "rows" => 5) %></td>
+ </tr>
+
+ <tr>
+ 	<td>&nbsp;</td>
+  <td><%= submit_tag 'Save', :id => 'submit-button' %></td>
+ </tr>
+</table>
+            					
+<script>
+ 
+ var courseInfo;
+ 
+ function setRatingSlopeStatus() {
+ 	countRoundCheckbox = $('round_count_towards_handicap');	
+ 	if (!countRoundCheckbox.checked) {
+ 		$('rating_slope').hide();
+ 	} else {
+ 		$('rating_slope').show();
+ 	}
+ }
+ 
+ function handleSubmit() {
+ 	$('post-round-errors').update('').hide();
+ 	$('submit-progress').show();
+ 	$('submit-button').disable(); 
+ }
+ 
+ function handleSubmitResponse(request) {
+ 	$('submit-button').enable();
+ 	$('submit-progress').hide();
+ 	var rtn = eval('(' + request.responseText + ')');
+ 	if (rtn.saved == true) {
+ 	  top.location.href = '<%= round_url(:id => nil) %>/' + rtn.id + <%= controller.action_name == 'new' ? "'?new=1'" : "''" %>;
+ 	} else {
+ 	  var errors = rtn.errors; 
+ 	  var errorHTML = "<h1><%= random_frustration %> There was a problem with your submission</h1>";
+ 	  errorHTML += "<ul>";
+ 	  for (i = 0; i < errors.length; i++) {
+ 	    errorHTML += "<li>" + errors[i] + "</li>";
+ 	  }
+ 	  errorHTML += "</ul>";
+ 	  $('post-round-errors').update(errorHTML).show();
+ 	  window.scrollTo(0, 0);
+ 	}
+ }
+     
+function setupDetails(scorecard, start, end, score_type) {
+	updateTeeAutoFill(score_type);
+			
+ 	scorecard.holes.each(function(h, index) {
+ 		if (index >= start && index < end) {
+ 		  h.activate()
+ 		} else {
+ 		  h.disable();
+ 		}
+ 	});
+}
+
+
+
+ function toggleScoreEntry(show, hide) {
+ 	Element.show(show);
+ 	Element.hide(hide);
+ }
+ 
+ function pickTee(id) {
+ }
+
+ 
+ function pickCourse(id, force) {
+ 	// console.log("id=", id);
+ 	
+	updater = new Ajax.Request('/course/scorecard/' + id, {
+		asynchronous:true,
+		onComplete: function(request){
+			courseInfo = eval('(' + request.responseText + ')');
+			
+			$('course-name').update(courseInfo.name + ' (' + courseInfo.city + ')');
+			$('course-change').show();
+			$('course_id').value = id.toString();
+			
+			// console.log("course_id=", $('course_id').getValue());
+
+		 	scorecard.holes.each(function(h, index) {
+				if (force) {
+					h.par.value = courseInfo.holes[index] ? courseInfo.holes[index].par : '';
+					h.redraw();
+				}			
+		 	});
+			
+			updateTeeAutoFill(getScoreType());
+
+			/*
+			if (!courseInfo.has_slope) {
+				$('slope-status').update("(optional)");
+			} else {
+				$('slope-status').update("");
+			}
+			*/
+			
+			$('length-units').update(courseInfo.length_units);
+			// $('rating-system-label').update(courseInfo.rating_system);
+			
+			scorecard.updateTotals();
+		}
+	});
+ }
+
+ function updateTeeAutoFill(score_type) {
+  
+  if (!courseInfo) return;
+  
+	var tees = new Array;
+	for (i = 0; i < courseInfo.tees.length; i++) {
+	  if (courseInfo.tees[i].score_type == score_type) {
+		  tees.push('<a href="#" onclick="autoFillTee(courseInfo.tees[' + i + ']); return false;">' + courseInfo.tees[i].name + '</a>');
+		}
+	}
+	
+	if (tees.length > 0) {
+		$('tee-autofill').update(tees.join(", "));
+	} else {
+		$('tee-autofill').update("(example: Blue, White, Yellow, Red)");
+	}
+ }
+ 
+ function getScoreType() {
+ 	 return parseInt(Form.getInputs("post_score", "radio", "round[score_type]").find(function(radio) { return radio.checked; }).value)
+ }
+ 
+ function changeCourse(id) {
+   pickCourse(id, true);	
+   $('round_tee_name').clear();
+   $('round_tee_rating').clear();
+   $('round_tee_slope').clear();
+   $('round_tee_yardage').clear();
+ }
+  
+ function autoFillTee(tee) {
+ 	$('round_tee_name').value = tee.name;
+ 	$('round_tee_rating').value = tee.mens_rating;
+ 	if (tee.mens_slope) {
+ 		$('round_tee_slope').value = tee.mens_slope;
+ 	}
+  $('round_tee_yardage').value = tee.yardage;
+ }
+ 
+ function init() {
+ 
+ 	 Event.observe($('round_score_type_3'), 
+ 	 			   'click', 
+ 	 			   function() { 
+ 	 			   	setupDetails(scorecard, 9, 18, 3);
+ 	 			   },
+ 	 			   false);
+
+ 	 Event.observe($('round_score_type_2'), 
+ 	 			   'click', 
+ 	 			   function() { 
+					  setupDetails(scorecard, 0, 9, 2);
+ 	 			   },
+ 	 			   false);
+ 	 			    	 			    	 			   
+ 	 Event.observe($('round_score_type_0'), 
+ 	 			   'click', 
+ 	 			   function() { 
+					  setupDetails(scorecard, 0, 18, 0);
+ 	 			   },
+ 	 			   false);
+
+ 	 Event.observe($('round_details_1'), 
+ 	 			   'click', 
+ 	 			   function() { 
+					  toggleScoreEntry("detailed", "simple"); 
+ 	 			   },
+ 	 			   false);
+
+ 	 Event.observe($('round_details_0'), 
+ 	 			   'click', 
+ 	 			   function() { 
+					   toggleScoreEntry("simple", "detailed"); 
+ 	 			   },
+ 	 			   false);
+ 	 			    	 			   
+	 var score_types = new Form.getInputs('post_score', 'radio', 'round[score_type]');
+	 for (i = 0; i < score_types.length; i++) {
+	 	var st = score_types[i];
+	 	if (st.checked) {
+	 		st.click()
+	 		break;
+	 	}
+	 }
+
+	 var details = new Form.getInputs('post_score', 'radio', 'round[details]');
+	 for (i = 0; i < details.length; i++) {
+	 	var st = details[i];
+	 	if (st.checked) {
+	 		st.click()
+	 		break;
+	 	}
+	 }
+	 	 
+	 setRatingSlopeStatus();
+	 
+	 <% if @round.new_record? %>
+		 <% if @course %>
+		 	 pickCourse(<%= @course.id %>, <%= request.get? ? "true" : "false" %>);
+		 <% else %>
+		 	<% if request.get? %>	
+			 window.setTimeout(function() {
+			   new Ajax.Updater('hidden_content_course_picker', 
+			       			    '/course/picker?cb=changeCourse&_session_id=<%= session.session_id %>', 
+			    			    {
+			    				  asynchronous:true, 
+			    				  evalScripts:true,
+			    				  onComplete:function(request) {
+			    				    RedBox.addHiddenContent('hidden_content_course_picker'); 
+			    				  }, 
+			    				  onLoading:function(request) {
+			    				    RedBox.loading(); 
+			    				  }
+			    		       });
+			  }, 200);
+			<% end %>
+		 <% end %>
+	<% else %>
+		pickCourse(<%= @course.id %>, false);	
+	<% end %>
+ }
+
+ Event.observe(window, 'load', init, false);
+  
+ var scorecard = new Loopr.Scorecard($('post_score'));
+ 
+</script>
+

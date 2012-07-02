@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html>
+
+	<%= render :partial => 'layouts/head2' %>
+
+	<body id="standard<%= '-logged-in' if logged_in? %>">
+		
+		<!-- HACK: make sure that the redbox overlay covers whole screen -->
+		<div></div>
+		
+		<%= render :partial => 'layouts/login_menu' %>
+		<%= render :partial => 'layouts/navbar' %>
+   		
+   	<br />
+		<div id="mainShell">
+			<div style="">
+
+
+<% if admin? %>
+	<div style="text-align: right; margin-bottom: 10px;"><strong>Admin:</strong> <%= link_to "Add Course", :controller => :course, :action => :new %></div>
+<% end %>
+			
+				<div>					
+
+					<% unless controller.action_name == "index" %>
+						<%= render :partial => 'courses/search_form', :locals => { :region => params[:region], :subdivision => params[:subdivision], :city => params[:city] } %>
+					<% end %>
+					
+					<div id="title">
+						<h1><%= yield :title %></h1>
+					</div>					
+					<%= @content_for_layout %>
+				</div>
+
+			</div>
+
+  		<br clear="all" />
+ 		</div>
+
+		<%= render :partial => 'layouts/footer' %>
+  
+	</body>
+</html>

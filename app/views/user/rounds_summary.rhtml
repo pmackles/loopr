@@ -1,0 +1,18 @@
+<% title username(@user, :possessive => true) + " Game: Stat Summary" %>
+<% current_tab "stats" %>
+
+<div style="margin-bottom: 15px">
+	Reports:
+	<%= link_to_unless((controller.action_name == "rounds_summary"), "Summary", stats_url(:id => @user)) { |n| "<b>#{n}</b>" } %> |
+	<%= link_to_unless((controller.action_name == "rounds_stat"), "Trend", user_rounds_stat_url(:id => @user)) { |n| "<b>#{n}</b>" } %>
+</div>
+
+<div class="subSection">
+
+	<%= render :partial => "rounds/round_filter", 
+						 :object => @filter, 
+						 :locals => { :courses => @user.saved_courses.of_type(0).collect { |sc| sc.course }, :users => [@user] } 
+	%>
+	<%= render :partial => "rounds/summary", :object => @summary, :locals => { :users => [@user] } %>
+</div>
+

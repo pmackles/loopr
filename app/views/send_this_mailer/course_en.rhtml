@@ -1,0 +1,5 @@
+Your friend at <%= @from %> sent you this course from LOOPR.com...
+
+<%= @course.name %>: <%= @base_url %>course/show/<%= @course.id %>
+
+<% unless @msg.blank? %><%= @msg %><% end -%>

@@ -1,0 +1,11 @@
+<% title @group.name + ": Rounds" %>
+<% current_tab "rounds" %>
+
+<% if @round_table.rounds.any? %>
+	<%= render :partial => 'rounds/round_table', :object => @round_table %>
+<% else %>
+	No rounds yet.
+	<% if @group.member?(current_user) %>
+		Rounds posted by group members will automatically appear here.
+	<% end %>
+<% end %>

@@ -1,0 +1,37 @@
+<head>
+  <title><%= yield(:title) || "Golf Game Manager" %> - LOOPR</title>
+  <%= yield(:description) %>
+  <%= yield(:robots) %>
+  
+  <%= stylesheet_link_tag 'loopr2' %>
+  <%= stylesheet_link_tag 'scorecard' %>
+  <%= stylesheet_link_tag 'redbox' %>
+
+  <%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/prototype/1.6.0.3/prototype.js' %>
+  <%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/scriptaculous/1.8.2/scriptaculous.js' %>
+  <%= javascript_include_tag 'http://ajax.googleapis.com/ajax/libs/swfobject/2.1/swfobject.js' %>
+  <%= javascript_include_tag 'http://static.ak.connect.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php' %>
+  <%= javascript_include_tag 'redbox' %>
+  <%= javascript_include_tag 'global' %>
+
+	<style>
+		.clearfix:after {
+		  content: ".";
+		  display: block;
+		  height: 0;
+		  clear: both;
+		  visibility: hidden;
+		}
+	</style>
+
+	<!--[if IE]>
+	<style>
+	  .clearfix {
+	    zoom: 1;     /* triggers hasLayout */
+	    }  /* Only IE can see inside the conditional comment
+	    and read this CSS rule. Don't ever use a normal HTML
+	    comment inside the CC or it will close prematurely. */
+	</style>
+	<![endif]-->
+</head>
+

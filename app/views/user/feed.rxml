@@ -1,0 +1,28 @@
+xml.instruct!
+xml.rss "version" => "2.0", "xmlns:dc" => "http://purl.org/dc/elements/1.1/" do
+  xml.channel do
+    xml.title "#{username(@user, :possessive => true, :current_user => nil)} rounds"
+    xml.link url_for(:only_path => false, 
+                     :controller => 'user', 
+                     :action => 'blog',
+                     :id => @user)
+    xml.pubDate CGI.rfc1123_date((@rounds.any? ? @rounds.first.updated_on : @user.created_at)) 
+    @rounds.each do |r|
+      xml.item do
+        xml.title "#{r.total_score} at #{r.course.name} on #{r.date_played.to_formatted_s(:mmddyyyy)}"
+        xml.link url_for(:only_path => false, 
+                         :controller => 'round', 
+                         :action => 'show',
+                         :id => r)
+                        
+        xml.description(render(:partial => 'course/rrrr', :locals => { :scorecard => r.scorecard }))
+        xml.pubDate CGI.rfc1123_date(r.updated_on)
+        xml.guid url_for(:only_path => false, 
+                         :controller => 'round',
+                         :action => 'show',
+                         :id => r)
+        xml.author h(username(r.user, :current_user => nil))
+      end
+    end
+  end
+end

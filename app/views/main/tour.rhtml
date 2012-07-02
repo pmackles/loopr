@@ -1,0 +1,32 @@
+
+<div style="width: 475px; margin-left: 150px;">
+	<h2 class="breadcrumb">The 3&#162; Tour</h2>
+	<p>
+	Fill out your
+	<%= link_to('profile', :controller => 'account', :action => 'edit_profile') %>
+	and 
+	<%= link_to('upload an icon', :controller => 'account', :action => 'edit_icon') %>
+	for yourself so people know what your all about.		
+	</p>
+
+	<p>
+	Do something with that pile of old scorecards sitting on your desk and
+	<%= link_to('post some rounds', :action => 'new', :controller => 'round') %>
+	to get your LOOPR handicap and to start compiling your personal stats. 
+	</p>
+		
+	<p>
+	Search our 
+	<%= link_to('course directory', :action => 'search', :controller => 'course') %>
+  	and add some of those 
+	<%= link_to('dream courses', :action => 'show', :controller => 'course', :id => 3465) %>
+  	to your
+	<%= link_to('course list', :action => 'courses', :controller => 'user', :id => @user) %>.
+ 	</p>
+ 		
+	<p>
+	<%= link_to 'Create a group', :action => 'new', :controller => 'group' %> 
+	and invite your friends
+  	to join so that you can start comparing stats and rounds.
+  	</p>
+</div>

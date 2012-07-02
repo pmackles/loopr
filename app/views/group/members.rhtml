@@ -1,0 +1,43 @@
+<% title @group.name + ": Members" %>
+<% current_tab "members" %>
+
+  	<% if @group.admin?(current_user) %>
+			<div style="margin-top: 10px; margin-bottom: 10px">
+				<%= link_to "Invite New Member", :action => :invite, :id => @group %>
+	  	</div>
+  	<% end %>
+	  	
+	<div class="subSection">
+  		<h3>Admins</h3>
+  		<div class="groupUserList">
+			<% @admins.each do |user| %>
+		    	<p style="float: left; text-align: center">
+		    	<%= user_icon_medium(user.icon_url) %><br />	  
+					<%= link_to(display_name(user), :action => 'blog', :controller => 'user', :id => user) %>
+			    </p>
+	    	<% end %>
+    	</div>
+    </div>
+    
+    <br clear="all" />
+
+	<div class="subSection">    	
+  		<h3>Members</h3>
+  		<% if @members.empty? %>
+  			No Members Yet.
+  			<%= link_to "Send an invite", :action => :invite, :id => @group %>
+		<% else %>
+
+	  		<div class="groupUserList">
+				<% @members.each do |user| %>
+			    	<p>
+			    	<%= user_icon_medium(user.icon_url) %><br />	  
+						<%= link_to(display_name(user), :action => 'blog', :controller => 'user', :id => user) %>
+				    </p>
+		    	<% end %>
+	    	</div>
+		<% end %>
+	</div>
+	
+	<br clear="all" />
+

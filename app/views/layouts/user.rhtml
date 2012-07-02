@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html>
+
+	<%= render :partial => 'layouts/head2' %>
+
+	<body id="standard<%= '-logged-in' if logged_in? %>">
+		
+		<!-- HACK: make sure that the redbox overlay covers whole screen -->
+		<div></div>
+
+		<%= render :partial => 'layouts/login_menu' %>
+		<%= render :partial => 'layouts/navbar' %>
+   	<br />
+   	
+		<div id="mainShell">
+			<div>
+
+				<div style="width: 620px; float: left;">
+
+					<div id="title">
+						<% if same_as_current_user?(@user) %>
+							<div style="float: right; margin-top: 8px;">
+								<%= link_to(image_tag("post-round-btn.gif"), :action => 'new', :controller => 'round') %>
+							</div>
+						<% end %>
+						
+						<h1>
+							<%= user_icon_medium(@user.icon_url) %>
+							<%= username(@user, :possessive => true) %> Game
+						</h1>
+					</div>
+	
+					<div id="tabmenu">
+						<ul>
+						    <li><%= link_to("Overview", 
+						    				{:controller => 'user', :action => 'blog', :id => @user}, 
+						    				:id => (yield(:current_tab) == "overview" ? "current" : "blog")) %></li>
+						    <li><%= link_to("Profile", 
+						    				{:controller => 'user', :action => 'profile', :id => @user},
+						    				:id => (yield(:current_tab) == "profile" ? "current" : "profile")) %></li>
+						    <li><%= link_to("Handicap", 
+						    				{:controller => 'user', :action => 'handicap', :id => @user}, 
+						    				:id => (yield(:current_tab) == "handicap" ? "current" : "handicap")) %></li>
+						    <li><%= link_to("Rounds", 
+						    				{:controller => 'user', :action => 'rounds', :id => @user},
+						    				:id => (yield(:current_tab) == "rounds" ? "current" : "rounds")) %></li>
+								<li><%= link_to("Courses", 
+												{:controller => 'user', :action => 'courses', :id => @user},
+												:id => (yield(:current_tab) == "courses" ? "current" : "courses")) %></li>
+						    <li><%= link_to("Stats", stats_url(:id => @user),
+						    				:id => (yield(:current_tab) == "stats" ? "current" : "stats")) %></li>
+					    </ul>
+					</div>
+		
+					<%= @content_for_layout %>
+				</div>
+			</div>
+			
+  		<br clear="all" />
+ 		</div>
+
+		<%= render :partial => 'layouts/footer' %>
+  
+	</body>
+</html>

@@ -1,0 +1,24 @@
+<% if list.any? %>
+	<ul class="plainList">
+		<% list.each_with_index do |r,i| %>
+				<li style="margin-bottom: 8px; padding-top: 5px" class="<%= "review-headline-separator" unless i == 0 %>">
+					<div class="clearfix">
+						<div style="float: left">
+							<%= user_icon_small r.user_icon_url %>
+						</div>
+						<div style="margin-left: 29px">
+			 			<%= link_to(display_name(:login => r.user_login, :source => r.user_source, :facebook_name => r.user_facebook_name),
+			 						blog_url(:id => r.user_id) 
+			 			) %> rated this course <em><%= Review::RATINGS[r.rating-1].first %></em>
+						<% unless r.body.blank? %>
+							<span class="start-quote" style="font-size: 10px">
+								<span class="end-quote"><%= sanitize(r.body)  %></span>
+							</span>
+						<% end %>
+						<span style="font-size: 10px; color: #777777">posted <%= time_ago_in_words r.created_at %> ago</span>
+						</div>
+					</div>
+	 			</li>
+		<% end %>
+	</ul>
+<% end %>

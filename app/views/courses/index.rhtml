@@ -1,0 +1,48 @@
+
+<% title "Courses" %>
+<% description "Easy to use golf course guide and directory. Contains info and maps for over 19,000 public and private golf courses worldwide including the US, Canada, England, Australia and South Africa." %>
+
+<div>
+	<div class="subSection">
+		<h2 style="margin-bottom: 0">Find Your Course</h2>
+		Info on over 21,000 courses worldwide. Search by course name or try our easy to use  
+		<%= link_to "interactive golf course map", courses_map_url() %> to search by location.
+		<div style="margin-top: 8px">
+			<% form_tag(courses_search_url(), :method => :get, :id => 'search-form', :target => '_top') do %>
+				Course name:
+				<%= text_field_tag :q, nil, :size => 36 %>
+				<%= submit_tag "Search" ,:name => nil  %><br />
+			<% end %>
+		</div>
+	</div>
+	
+	<div class="subSection">
+		<h2 style="margin-bottom: 0">US Golf Courses</h2>
+		<% Geography::Region.find_by_name("United States").subdivisions.ordered.each_with_index do |s,i| %>
+			<%= " <b>&middot;</b> " unless i == 0 %>
+			<%= link_to(s.last, courses_browse_url(:region => "United States", :subdivision => s.last)) %>	
+		<% end %>
+	</div>
+	
+	<div class="subSection">
+		<h2 style="margin-bottom: 0">Canadian Golf Courses</h2>
+		<% Geography::Region.find_by_name("Canada").subdivisions.ordered.each_with_index do |s,i| %>
+			<%= " <b>&middot;</b> " unless i == 0 %>
+			<%= link_to(s.last, courses_browse_url(:region => "Canada", :subdivision => s.last)) %>	
+		<% end %>
+	</div>
+	
+	<div class="subSection">			
+		<h2 style="margin-bottom: 0">All Golf Courses</h2>
+		<% Geography::Region.all.each_with_index do |r,i| %>
+			<%= " <b>&middot;</b> " unless i == 0 %>
+			<%= link_to(r.name, courses_browse_url(:region => r.name)) %>
+		<% end %>
+	</div>
+</div>
+
+
+	
+
+
+

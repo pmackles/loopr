@@ -1,0 +1,11 @@
+<div class="dialog">
+	<div id="title"><h1>Account Needed</h1></div>
+	
+	<strong><%= random_frustration %></strong> - Before you can post scores, 
+	rate courses, build lists, create groups or leave any kind 
+	of mark on this site you need to either 
+	<%= link_to("Sign up", :controller => 'account', :action => 'signup') %>
+	or 
+	<%= link_to("Sign in", :controller => 'account', :action => 'login') %>. 
+	Thanks.
+</div>

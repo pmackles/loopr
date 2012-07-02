@@ -1,0 +1,16 @@
+<div class="review">
+	<div style="float: left">
+		<%= render :partial => "review/rating", :object => review.rating %>
+	</div>
+	<div style="margin-left: 70px">
+	  	<h4>
+	  		Review by <%= link_to display_name(review.user), 
+  								  :controller => 'user', 
+  								  :action => 'blog', 
+  								  :id => review.user %> on
+  			<%= review.created_at.to_formatted_s :mmddyyyy %>
+  		</h4>
+		<%= simple_format(h(review.body)) %>
+	</div>
+</div>
+<br clear="all" />

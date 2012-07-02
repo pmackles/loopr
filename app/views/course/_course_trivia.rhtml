@@ -1,0 +1,11 @@
+ 	<h3>Course Trivia</h3>	 	
+	<% oldest = Course.oldest(1)[0]; longest = Course.longest(1)[0] %>
+	<b>Longest Course On File:</b> <%= link_to longest.name, 
+							   :controller => 'course', 
+							   :action => 'show', 
+							   :id => longest %>
+	(<%= longest.yards %> yards)<br /> 
+	<b>Oldest Course On File:</b> <%= link_to oldest.name, 
+							   :controller => 'course', 
+							   :action => 'show', 
+							   :id => oldest %> (built in <%= oldest.year_built %>)<br />

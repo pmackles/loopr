@@ -1,0 +1,134 @@
+<% title "Compare Rounds" %>
+
+<% if @rounds.empty? %>
+	Sorry, you need to pick some rounds to compare.
+<% end %>
+
+<div>
+	<% @rounds.in_groups_of(4)[0..0].each do |g| %>
+		<table class="stat-summary" style="font-size: 11px">
+	  	<tr>
+	  		<th valign="bottom" style="width: 160px">Who:</th>
+				<% g.each do |r| %>
+					<td>
+						<% if r %>
+							<%= user_icon_medium(r.user.icon_url) %><br />
+							<%= link_to(username(r.user), blog_url(r.user)) %>
+						<% end %>
+					</td>
+				<% end %>
+	  	</tr>
+	  	
+	  	<tr class="separator">
+	  		<th valign="top">Date:</th>
+				<% g.each do |r| %>
+					<td class="data">
+						<% if r %>
+							<%= r.date_played.to_formatted_s :Beyyyy %>
+						<% end %>
+					</td>
+				<% end %>
+	  	</tr>
+	
+	  	<tr class="separator">
+	  		<th valign="top">Course:</th>
+				<% g.each do |r| %>
+					<td class="data">
+						<% if r %>
+							<%= link_to(r.course.short_name, course_url(:id => r.course, :name => r.course.name)) %>
+						<% end %>
+					</td>
+				<% end %>
+	  	</tr>
+	
+	  	<tr class="separator">
+	  		<th valign="top">Holes:</th>
+				<% g.each do |r| %>
+					<td class="data">
+						<% if r %>
+							<%= r.total_holes %>
+						<% end %>
+					</td>
+				<% end %>
+	  	</tr>
+	  	
+	  	<tr class="separator">
+	  		<th>Tees</th>
+				<% g.each do |r| %>
+					<td>
+						<% if r %>
+							<%= f r.tee.name %>
+						<% end %>
+					</td>
+				<% end %>
+	  	</tr>
+	  	
+	  	<tr class="separator">
+	  		<th>Handicap</th>
+				<% g.each do |r| %>
+					<td class="data">
+						<% if r %>
+							<%= link_to(f(r.handicap), handicap_url(:id => r.user)) %>
+						<% end %>
+					</td>
+				<% end %>
+	  	</tr>
+	  	
+	  	<tr class="separator">
+	  		<th>Course Handicap</th>
+				<% g.each do |r| %>
+					<td>
+						<% if r %>
+							<%= f r.course_handicap %>
+						<% end %>
+					</td>
+				<% end %>
+	  	</tr>
+	
+	  	<tr class="separator">
+	  		<th>Gross Score</th>
+				<% g.each do |r| %>
+					<td class="data">
+						<% if r %>
+							<%= link_to(f(r.total_score), round_url(r)) %>
+						<% end %>
+					</td>
+				<% end %>
+	  	</tr>
+	  		  	
+		  <% 
+	  	  [
+	  	  Metric.net_score,
+	  	  Metric.pct_girs, 
+	  	  Metric.avg_putts_per_hole,
+	  	  Metric.avg_putts_per_hole_after_gir,
+	  	  Metric.avg_par_3,
+	  	  Metric.avg_par_4,
+	  	  Metric.avg_par_5,
+	  	  Metric.pct_fairways_hit,
+	  	  Metric.max_driving_distance,
+	  	  Metric.avg_driving_distance,
+	  	  Metric.pct_birdies,
+	  	  Metric.pct_pars,
+	  	  Metric.pct_bogeys,
+	  	  Metric.pct_dbl_bogeys,
+	  	  Metric.pct_others,
+	  	  Metric.pct_one_putts,
+	  	  Metric.pct_two_putts,
+	  	  Metric.pct_three_putts,
+	  	  Metric.pct_fourormore_putts
+	    ].each_with_index do |m, i| %>
+				<tr class="separator">
+					<th><%= m.label %></th>
+					<% g.each do |r| %>
+						<td class="data">
+							<% if r %>
+								<%= r.send(m.name.to_s + "_formatted") || "-" %>
+							<% end %>
+						</td>
+					<% end %>
+				</tr>
+			<% end %> 
+		</table>
+	<% end %>
+</div>

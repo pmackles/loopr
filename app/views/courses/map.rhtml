@@ -1,0 +1,82 @@
+<% title "Golf Course Finder" %>
+<% description "Interactive golf course map. Easily find courses anywhere in the world. Includes photos, reviews, scorecard info, handicap tools and more." %>
+
+<p>
+Enter a location below for a map of nearby golf courses. 
+</p>
+
+<% form_tag("#", :id => "search-form", :onsubmit => "if (this['q'].value != '') { new SearchRequest(); }; return false;") do %>
+	 <span style="font-size: 9px; color: #999">
+	 	e.g., "toronto" or "brooklyn, ny" or "08648" or "sydney, australia"
+	 	or "1600 Pennsylvania Ave, Washington DC"
+	 	</span><br />
+	<%= text_field_tag :q, (params[:location] || "").gsub(/_/, ' '), :size => 64 %>
+	<%= submit_tag "Map It!" ,:name => nil  %>
+<% end %>	
+
+<p id="loading" style="display:none">
+	Loading... <%= image_tag "indicator_kit.gif", :align => 'top', :width => '48', :height => '16' %>
+</p>
+
+<p id="results"></p>
+
+<div style="float: left; width: 225px; height: 490px; border: 1px solid #aaa; overflow: auto; overflow-x: hidden; overflow-y: auto; padding: 5px">
+	<ul class="plainList" id="course-list"></ul>
+</div>
+
+<div id="map" style="margin-left: 235px; width: 530px; height: 500px; border: 1px solid #aaa">
+	<div class="loading">Loading...</div>
+</div>
+
+<%= gmaps_javascript_include %>
+<%= javascript_include_tag "maputils" %>
+<script type="text/javascript">
+	
+	SearchRequest = Class.create();
+	SearchRequest.prototype = {
+		initialize: function() {
+			new Ajax.Request('/courses/searchloc', 
+										 {
+										 	asynchronous:true, 
+										 	evalScripts:true, 
+										 	parameters: Form.serialize('search-form'),
+										 	onLoading: function() { $('loading').show(); $('results').update(''); },
+										 	onComplete: this.complete.bind(this)
+										 });
+		},
+		
+		complete: function(request) {
+			var result = eval('(' + request.responseText + ')');
+			$('loading').hide();
+  		if (result.loc.success) {
+  			courseMap.reset();
+  			courseMap.loadCourses(result.courses);
+  			courseMap.display(new GLatLng(result.loc.lat, result.loc.lng));
+  			courseMap.displayListPanel(result.distances);
+  	
+  			// courseMap.reset(new GLatLng(result.loc.lat, result.loc.lng), result.courses, result.distances); 	
+  			$('results').update("Found <strong>" + result.courses.length + "</strong> courses within 15 miles (40km) of <strong>" + result.loc.full_address + "</strong>.");
+  			top.document.title = "Golf Course Finder - " + result.loc.full_address + " - LOOPR";
+			} else {
+				$('results').update("<span style='color: red'>Sorry, no maps for <strong>" + $("search-form")["q"].value + "</strong>.</span>");
+			}
+		}
+	};
+
+	var courseMap;	
+	Event.observe(window, 'load', function() {
+		courseMap = new Loopr.CourseMap("<%= GMAPS_KEY %>", "map", new GLatLng(0, 0), 1, G_NORMAL_MAP);
+
+		if ($("search-form")["q"].value) {
+			new SearchRequest();
+		} else {
+		 	courseMap.display();
+		}
+		
+	}, false);
+  
+</script>
+
+
+
+	

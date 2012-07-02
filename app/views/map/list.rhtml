@@ -1,0 +1,27 @@
+<h1>Listing maps</h1>
+
+<table>
+  <tr>
+  <% for column in Map.content_columns %>
+    <th><%= column.human_name %></th>
+  <% end %>
+  </tr>
+  
+<% for map in @maps %>
+  <tr>
+  <% for column in Map.content_columns %>
+    <td><%=h map.send(column.name) %></td>
+  <% end %>
+    <td><%= link_to 'Show', :action => 'show', :id => map %></td>
+    <td><%= link_to 'Edit', :action => 'edit', :id => map %></td>
+    <td><%= link_to 'Destroy', { :action => 'destroy', :id => map }, :confirm => 'Are you sure?' %></td>
+  </tr>
+<% end %>
+</table>
+
+<%= link_to 'Previous page', { :page => @map_pages.current.previous } if @map_pages.current.previous %>
+<%= link_to 'Next page', { :page => @map_pages.current.next } if @map_pages.current.next %> 
+
+<br />
+
+<%= link_to 'New map', :action => 'new' %>

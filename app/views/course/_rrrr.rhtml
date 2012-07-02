@@ -1,0 +1,15 @@
+<p>
+<% unless scorecard.rounds[0].comments.nil? || scorecard.rounds[0].comments.blank? %>
+        <%= sanitize(scorecard.rounds[0].comments) %>
+<% else %>
+        <i>No Comment</i>
+<% end %>
+</p>
+
+Scorecard and full breakdown of round
+<%= link_to("on the other side",
+        :only_path => false,
+    :controller => 'round',
+    :action => 'show',
+    :id => scorecard.rounds[0])
+%>

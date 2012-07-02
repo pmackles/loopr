@@ -1,0 +1,81 @@
+
+<div>
+	
+	<div id="screenshots">
+		<%= image_tag("golf_scorecard.jpg") %>
+		<p>
+		<i><%= @random_quote[:quote] %> - <%= @random_quote.author %></i>
+		</p>
+	</div>
+
+	<div id="feature-list">
+
+		<h1 style="font-size: 32px; margin-bottom: 20px; white-space: nowrap">Free, Easy, Fun</h1>
+		<h3 style="margin-bottom: 20px;">LOOPR is an online golf game manager for you and your friends</h3>
+
+	  	<b>LOOPR is totally free and doesn't require you to download or install any software.
+	  	With LOOPR you can...</b>
+	  	<ul>
+	   		<li><%= new_bug %> - LOOPR now works on <%= link_to("Facebook", "http://www.facebook.com/p.php?api_key=#{FACEBOOK_API_KEY}") %></li>
+	   		<li>easily post your scores online and keep track of every single stroke.</li>
+	   		<li>get an unofficial handicap (similar formula to USGA&trade;).</li>
+	   		<li>gain incredible insights into your game through the dozens of different stats that we track for you.</li>
+	   		<li>share your golf game with your friends through personalized urls, blog widgets and email tools.</li>
+	   		<li>create groups with your friends to compare stats and setup outings.</li>
+	   		<li>get the 411 on the course you are playing this weekend</li>
+	  	</ul>
+
+		<h3><%= link_to "Take a Tour", :controller => 'screenshots' %></h3>
+	
+	</div>
+					
+	<br clear="all" />
+
+
+	<div id="signup-wrapper">
+		<div id="signup-link">
+			<%= link_to "Signup for a Free LOOPR Account",
+						:controller => 'account',
+						:action => 'signup' %>
+		</div>
+		<div>
+			  If you already have an account, 
+			  <%= link_to "login", :controller => 'account', :action => 'login' %>.
+		</div>		
+	</div>
+			
+ 	<div style="text-align: left;">
+ 		<h3>Recently Posted Rounds</h3>
+ 		<table width="100%">
+ 			<tr>
+ 				<%= render :partial =>'round_link', 
+ 						   :collection => @gstats.recent_rounds %>
+			</tr>
+		</table>
+
+ 		<hr noshade />
+ 				 		
+ 		<h3>Low Rounds</h3>
+ 		<table width="100%">						
+			<tr>
+
+ 				<%= render :partial =>'round_link', 
+ 						   :collection => @gstats.low_rounds %>
+	 		</tr>
+	 	</table>	 			
+	</div>
+
+ 	<hr noshade />
+ 	
+ 	<div style="margin-top: 20px;">
+ 		<%= render :partial => 'community_stats', :object => @gstats %>
+ 	</div>
+				
+	<hr noshade />
+	
+ 	<div style="margin-top: 20px;">
+ 		<%= render :partial => 'course/course_trivia' %>
+	</div>
+					
+</div>
+

@@ -1,0 +1,96 @@
+<% content_for :title do %>Golf Game - Stats Leaders<% end %>
+
+<style>
+.leader-board {
+  width: 250px; 
+  border-left: 1px solid #eee; 
+  margin-bottom: 25px;
+  float: left;
+  margin-right: 25px;
+}
+
+.leader-board .subheader {
+  padding: 4px 8px; 
+  background-color: #EEEEEE; 
+  border-top: 1px solid #CCCCCC;
+}
+
+</style>
+
+<div>
+	<%= link_to "&laquo; Go back", url_for(:action => '', :only_path => false) %>
+</div>
+
+<div style="margin-top: 15px">
+Rankings for you and your friends in different statistical categories. These rankings are based on
+available data for the last 20 round entered and are completely unscientific. Ties broken by number 
+of rounds entered.
+</div>
+
+<div style="margin-top: 15px;">
+	<%= render :partial => 'stat_ranker', 
+			   :locals => {
+			    :sorter => @sorter,
+			   	:attr => :putting_average,
+			   	:title => 'Putting Average',
+			   }
+	%>
+
+	<%= render :partial => 'stat_ranker', 
+			   :locals => {
+			    :sorter => @sorter,
+			   	:attr => :gir_percentage,
+			   	:title => 'GIR %',
+			   }
+	%>
+
+	<%= render :partial => 'stat_ranker', 
+			   :locals => {
+			    :sorter => @sorter,
+			   	:attr => :par3_average,
+			   	:title => 'Par 3 Average',
+			   }
+	%>
+
+	<%= render :partial => 'stat_ranker', 
+			   :locals => {
+			    :sorter => @sorter,
+			   	:attr => :par4_average,
+			   	:title => 'Par 4 Average',
+			   }
+	%>
+
+	<%= render :partial => 'stat_ranker', 
+			   :locals => {
+			    :sorter => @sorter,
+			   	:attr => :par5_average,
+			   	:title => 'Par 5 Average',
+			   }
+	%>
+
+	<%= render :partial => 'stat_ranker', 
+			   :locals => {
+			    :sorter => @sorter,
+			   	:attr => :birdie_percentage,
+			   	:title => 'Birdie %',
+			   }
+	%>
+
+	<%= render :partial => 'stat_ranker', 
+			   :locals => {
+			    :sorter => @sorter,
+			   	:attr => :par_percentage,
+			   	:title => 'Par %',
+			   }
+	%>
+
+	<%= render :partial => 'stat_ranker', 
+			   :locals => {
+			    :sorter => @sorter,
+			   	:attr => :bogey_percentage,
+			   	:title => 'Bogey %',
+			   }
+	%>		
+					
+</div>
+

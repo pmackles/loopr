@@ -1,0 +1,74 @@
+
+<% if same_as_current_user?(@user) %>
+	<div style="margin-bottom: 15px">
+		<% if @saved_courses.empty? %>
+			Your course list is empty. You can add courses by 
+			<%= link_to "posting some rounds", :controller => 'round', :action => 'new' %> or by switching to 
+			<%= link_to "list view", user_courses_url(:id => @user, :view => "list") %>.
+		<% else %>
+			You can add/remove courses to your course list by switching to 
+			<%= link_to "list view", user_courses_url(:id => @user, :view => "list") %>.
+		<% end %>
+	</div>
+<% end %>
+
+<div style="margin-bottom: 5px; font-style: italic">
+	<%= pluralize(course_map.length, "course") %>,
+	<%= pluralize(course_map.collect { |sc| sc.course_country }.uniq.length, "country") %>
+</div>
+
+<div id="map" style="width: 740px; height: 500px; border: 1px solid #aaa">
+	<div class="loading">Loading...</div>
+</div>
+
+<%= gmaps_javascript_include %>
+<%= javascript_include_tag "maputils" %>
+<script type="text/javascript">
+  
+	var courseMap;	
+	Event.observe(window, 'load', function() {
+		var courses = <%= course_map.collect { |sc| 
+				{
+					:id => sc.course_id,
+					:course_url => course_url(:name => sc.course_namex, :id => sc.course_id, :only_path => false),
+					:name => sc.course_namex, 
+					:latitude => sc.course_latitude, 
+					:longitude => sc.course_longitude,
+					:short_address => Address.new(nil, sc.course_city, sc.course_state, sc.course_country).to_formatted_s(:short),
+					:description => fffggg(@user, sc),
+					:stats => { 
+						:rounds_played => sc.rounds_played.to_i,
+						:scoring_average => sc.scoring_average
+					} 
+				}
+		}.to_json %>;
+		
+		courseMap = new Loopr.CourseMap("<%= GMAPS_KEY %>", "map");
+	  courseMap.openInfoWindow = function (markerNumber) {
+	 		var marker = this.markers[markerNumber];
+	  	var c = this.courses[markerNumber];
+	
+	  	var more = "<div class=\"course-list-header\">";
+	  	more += "<h3>" + "<a style=\"color: black\" href=\"" + c.course_url + "\">" + c.name + "</a></h3>";
+	  	more += "<span style=\"font-size: 10px;\">" + c.short_address + "</span>";  
+			more += "</div>";
+	  	
+	  	more += "<div id=\"detailmap-" + c.id + "\" style=\"width: 250px; height: 150px; margin: 10px 0\">";
+	  	more += "<img src=\"http://maps.google.com/staticmap?zoom=14&maptype=satellite&center=" + marker.getLatLng().lat() + "," + marker.getLatLng().lng() + "&size=250x150&key=" + this.gmapKey + "\" />";
+	  	more += "</div>";
+	  	
+	  	more += "<div style=\"font-size: 10px; width: 250px\">";
+	  	more += c.description;
+	  	more += "</div>";
+
+	  	marker.openInfoWindowHtml(more);
+	  };
+  
+		courseMap.loadCourses(courses);
+
+		courseMap.display(null, 0, false);
+		courseMap.displayLegendControl();
+	  
+	}, false);
+  
+</script>

@@ -1,0 +1,130 @@
+
+<p>
+Enter course info below. Required fields marked with an *.
+</p>
+
+<%= error_messages_for :course %>
+
+<table>
+	<tr>
+		<td>*Name:</td>
+		<td><%= text_field :course, :name %></td>
+	</tr>
+	<tr>
+		<td>Street:</td>
+		<td><%= text_field :course, :street %></td>
+	</tr>
+	<tr>
+		<td>City:</td>
+		<td><%= text_field :course, :city %></td>
+	</tr>
+	<tr>
+		<td>*Country:</span></td>
+	  	<td>
+	  		<%= select(:region, :name, Geography::Region.all.collect { |r| [r.name, r.name] }, 
+	  				   {:prompt => 'Please Select'}, :onchange => 'changeCountry()' ) %>
+	  	</td>  
+	</tr>
+	<tr>
+		<td>*State/Province/County:</span></td>
+	  	<td>
+	  		<%= select('course', 'state', {}, {:prompt => 'Please Select'} ) %>
+	  	</td>  
+	</tr>
+	<tr>
+		<td>Postal Code:</td>
+		<td><%= text_field :course, :postal_code %></td>
+	</tr>
+	<tr>
+		<td>Phone:</td>
+		<td><%= text_field :course, :phone %></td>
+	</tr>
+	<tr>
+		<td>URL:</td>
+		<td><%= text_field :course, :url %></td>
+	</tr>
+	<tr>
+		<td>Year Built:</td>
+		<td><%= text_field :course, :year_built %></td>
+	</tr>
+	<tr>
+		<td>Designer:</td>
+		<td><%= text_field :course, :designer %></td>
+	</tr>
+	<tr>
+		<td>Holes:</td>
+		<td><%= text_field :course, :number_of_holes %></td>
+	</tr>
+	<tr>
+		<td>Length:</td>
+		<td><%= text_field :course, :yards %></td>
+	</tr>
+	<tr>
+		<td>Par:</td>
+		<td><%= text_field :course, :par %></td>
+	</tr>
+	<tr>
+		<td>Type:</td>
+		<td><%= select(:course, :club_type, 
+					   Course::CLUB_TYPES, 
+					   { :prompt => 'Please Select'} ) %></td>
+	</tr>
+</table>
+<%= hidden_field :course, :country %>
+<%= hidden_field :course, :latitude %>
+<%= hidden_field :course, :longitude %>
+
+<script>
+
+var regions = {};
+<% Geography::Region.all.each do |r| %>
+	regions['<%= r.name %>'] = {};
+	regions['<%= r.name %>'].country_code = '<%= r.country_code %>';
+	regions['<%= r.name %>'].subdivisions = [
+		<%= r.subdivisions.ordered.collect { |s| "{ label: '#{escape_javascript(s[1])}', value: '#{s[0]}' }" }.join(", ") %>
+	];
+<% end %>
+
+
+function changeCountry(selected) {
+	
+	var regionSelect = $('region_name');
+	var stateSelect = $('course_state');
+	var region = regionSelect.value;
+	
+	if (stateSelect.hasChildNodes()) {
+    	while ( stateSelect.childNodes.length >= 1 ) {
+        	stateSelect.removeChild(stateSelect.lastChild);     
+    	} 
+	}
+	
+	if (region) {
+		$('course_country').value = regions[region].country_code;
+		if (!selected) {
+			o = document.createElement("option");
+			o.value ="";
+			o.innerHTML = "Please Select";
+			stateSelect.appendChild(o);
+		}
+		
+		var stateList = regions[region].subdivisions;
+		for (i = 0; i < stateList.length; i++) {
+			o = document.createElement("option");
+			o.value = stateList[i].value;
+			o.innerHTML = stateList[i].label;
+			o.selected = (stateList[i].value == selected);
+			stateSelect.appendChild(o);
+		}
+	} else {
+		o = document.createElement("option");
+		o.value ="";
+		o.innerHTML = "Please Select";
+		stateSelect.appendChild(o);
+	}
+}
+
+changeCountry('<%= @course.state %>');
+
+</script>
+
+<%= gmaps_javascript_include %>

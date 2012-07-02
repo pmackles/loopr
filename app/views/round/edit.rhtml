@@ -1,0 +1,17 @@
+<% title "Edit Score" %>
+<% supress_ads %>
+
+<div id="hidden_content_add_tee" style="display: none;"></div>
+<div id="hidden_content_course_picker" style="display: none;"></div>
+
+<div style="margin-top: 1em;">
+	<% form_remote_tag(
+			:url => {:controller => 'round', :action => 'update', :id => @round, :only_path => true, :_session_id => session.session_id },
+			:loading => 'handleSubmit();',
+			:complete => 'handleSubmitResponse(request);',
+			:requestHeaders => "{Cookie: '_session_id=#{session.session_id}'}",
+			:html => {:id => 'post_score'}) do %>
+	    <%= render_partial 'round/form' %>
+	<% end %>
+</div>
+

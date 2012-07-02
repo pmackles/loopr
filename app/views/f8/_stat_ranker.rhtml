@@ -1,0 +1,36 @@
+<% leader = sorter.leader(attr) %>
+<div class="leader-board">
+	<%= image_tag(@friends[leader.facebook_id].pic_square, :style => "float: right; width: 40px; height: 40px") %>
+	<div class="header">			
+		<h2><%= title %></h2>
+	</div>
+	<div class="subheader">
+		Leader: <%= link_to @friends[leader.facebook_id].name, 
+							"http://www.facebook.com/profile.php?id=#{leader.facebook_id}" %> 
+	</div>
+	<div style="clear: all; padding: 4px 8px;">
+		<table width="100%">
+			<tr>
+				<td style="font-weight: bold">Rank</td>
+				<td style="font-weight: bold">Name</td>
+				<td style="text-align: right; font-weight: bold">Avg</td>
+				<td style="text-align: right; font-weight: bold">Rounds</td>
+			</tr>
+			<% sorter.sorted(attr).each_with_index { |u, i| %>
+				<tr>
+					<td><%= i+1 %></td>
+					<td>
+					<%= link_to @friends[u.facebook_id].name,
+								"http://www.facebook.com/profile.php?id=#{u.facebook_id}" %>
+					</td>
+					<td style="text-align: right"> 
+						<%= f u.stats.send(attr) %>
+					</td>
+					<td style="text-align: right">
+						<%= u.stats.rounds_played %>
+					</td>
+				</tr>
+			<% } %>
+		</table>
+	</div>
+</div>

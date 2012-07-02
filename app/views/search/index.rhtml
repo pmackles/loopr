@@ -1,0 +1,51 @@
+
+<div>
+
+<%= render :partial => 'search_form' %>
+	
+<% if @courses.size > 0 || @place %>
+
+	<% if @courses.size > 0 %>
+		<p>
+			Found <%= pluralize @course_pages.item_count, "matching course" %> for
+			<strong><%= h(params[:q]) %></strong> 
+			(Showing <%= @course_pages.current_page.first_item %> - 
+			 <%= @course_pages.current_page.last_item %>)
+		</p>
+	<% end %>
+			
+	<% if @place %>
+		<p style="font-size: 1.25em;">
+		<%= image_tag 'icon-compass.jpg', :border => 0, :width => 37, :height => 32, :align => 'top' %>
+		<%= link_to "Explore courses #{@place.description}",
+					:controller => 'course', 
+					:pl => @place.postal_code || @place.state %> 
+		</p>
+	<% end %>
+
+	<% if @courses.size > 0 %>
+		<div id="searchResultsContainer">
+			<ul>
+				<%= render(:partial => 'course/course_summary', 
+						   :collection => @courses) %>
+			</ul>
+		</div>
+		
+		<% if @course_pages.page_count > 1 %> 
+			<div id="pageLinksContainer">
+				Showing <%= @course_pages.current_page.first_item %> - 
+				 <%= @course_pages.current_page.last_item %> of <%= @course_pages.item_count %>
+				<div id="pageLinks">
+					Page:
+					<%= pagination_links(@course_pages, :params => params ) %>
+				</div>
+			</div>
+		<% end %>
+	<% end %>
+	
+<% else %>
+	<%= render :partial => 'no_results' %>
+<% end %>
+
+	
+</div>

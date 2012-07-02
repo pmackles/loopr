@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html>
+
+	<%= render :partial => 'layouts/head2' %>
+
+	<body id="standard<%= '-logged-in' if logged_in? %>">
+		
+		<!-- HACK: make sure that the redbox overlay covers whole screen -->
+		<div></div>
+		
+		<%= render :partial => 'layouts/login_menu' %>
+		<%= render :partial => 'layouts/navbar' %>
+	  
+	  <div>
+	    <%= @content_for_layout %>
+	  </div>
+  
+	</body>
+</html>

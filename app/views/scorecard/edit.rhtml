@@ -1,0 +1,33 @@
+<% title "Edit Scorecard - #{h @course.name}" %>
+<% supress_ads %>
+
+<%= link_to "&laquo; Back to Course Page", :controller => 'course', :action => 'show', :id => @course %>
+
+<p>
+Enter hole information below
+</p>
+
+<% form_for(:scorecard, @scorecard, :url => {
+								:controller => 'scorecard',
+								:action => 'edit',
+								:id => @course
+							 }) do |f| %>
+	<table border="1">
+		<tr>
+			<td>Hole</td>
+			<% @scorecard.holes.each do |h, idx| %>
+				<td class="score"><%= h.number + 1 %></td>
+			<% end %>
+		</tr>
+		<tr>
+			<td>Par</td>
+			<% @scorecard.holes.each_with_index do |h, idx| %>
+				<td class="score">
+					<%= text_field :holes, :par, :maxlength => '2', 
+								   :index => idx, :object => h %>
+				</td>
+			<% end %>
+		</tr>
+	</table>
+	<%= submit_tag "Save" %>
+<% end %>

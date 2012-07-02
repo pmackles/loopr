@@ -1,0 +1,29 @@
+
+<ul style="list-style: none; padding: 0; margin: 0;">
+	<% @course.tees.each_with_index { |item, index| %>
+		<li id="<%= "id#{item.id}" %>">
+			
+		    <%= radio_button('tee', 'id', item.id) %>
+			<span><%= item.name %>
+	  	    (rating/slope: <%= item.mens_rating %>/<%= item.mens_slope %>;
+	  	     <%= item.yardage %> yards; par <%= item.par %>)</span>
+	  	</li>
+	<% } %>
+    <li style="margin-top: 3px;">
+    	<em>Don't see your tee?</em> You can
+	    <a href="#" onclick="new Ajax.Updater('hidden_content_add_tee', 
+	    									  '/tee/new?course%5Bid%5D=<%= @course.id %>', 
+	    									  {
+	    									  	asynchronous:true, 
+	    									  	evalScripts:true, 
+	    									  	onComplete:function(request) {
+	    									  		RedBox.addHiddenContent('hidden_content_add_tee'); 
+	    									  	}, 
+	    									  	onLoading:function(request) {
+	    									  		RedBox.loading(); 
+	    									  	}
+	    									  }); return false;">add it to our database</a>
+    </li>
+</ul>
+
+

@@ -1,0 +1,162 @@
+<% title username(@user, :possessive => true) + " Game: #{@round.total_score} at #{@round.course.short_name}" %>
+<% current_tab "rounds" %>
+
+<% if @round.authorized?(current_user) %>
+	<div style="float: right; margin-bottom: 15px">
+		<%= link_to('Edit Round', round_edit_url(:id=> @round)) %> | 
+		<%= link_to_function(
+					'Delete Round', 
+					"if (confirm('Are you sure you want to delete this round?')) top.location.href='#{round_destroy_url(:id=> @round)}'"
+			  ) %>
+	</div>
+	<br clear="right" />
+<% end %>
+
+<div class="subSection">
+<h2><%= @round.date_played.to_formatted_s :Beyyyy %> - <%= @round.course.short_name %><br />
+<span style="font-size: 10px; font-weight: normal">
+	Posted by <em><%= display_name(@round.user) %></em> on <em><%= @round.created_on.to_formatted_s :Beyyyy %></em>
+</span>
+</h2>
+
+<table style="margin-top: 15px">
+<tr>
+<th valign="top">Course:</th> 
+<td><%= link_to @round.course.name, course_url(:id => @round.course, :name => @round.course.name) %><br /><span style="font-size: 10px; font-weight: normal"><%= @round.course.address.to_formatted_s :short %></span></td>
+</tr>
+<tr>
+<th>Tees:</th>
+<td><%= @round.tee.to_formatted_s(@round.course.length_units) %></td>
+</tr>
+<tr>
+<th>Holes:</th>
+<td><%= score_type @round %></td>
+</tr>
+<tr>
+<th>Handicap:</th><td><%= @round.handicap || na %></td>
+</tr>
+<tr>
+<th>Course Handicap:</th><td><%= @round.course_handicap || na %></td>
+</tr>
+<tr>
+<th>Gross Score:</th>
+<td>
+	<%= @round.total_score %>
+	<% if @round.total_holes == 18 %>
+		(Course Avg: <%= @saved_course.stats.scoring_average %>)
+	<% end %>
+	</td>
+</tr>
+<tr>
+<th>Net Score:</th> 
+<td>
+	<%= @round.net_score || na %>
+	<% if @round.total_holes == 18 && @saved_course.stats.net_score %>
+		(Course Avg: <%= @saved_course.stats.net_score %>)
+	<% end %>
+</td>
+</tr>
+<tr>
+<th valign="top">Notes:</th>
+<td>
+<% if @round.comments.blank? %>
+	<%= na %>
+<% else %>
+	<%= sanitize(@round.comments)  %>
+<% end %>
+</td>
+</tr>
+</table>
+
+</div>
+				  	  
+<div class="subSection">
+	<% if @round.detailed? %>
+		<%= render :partial => 'course/scorecard', :locals => { :r => @round, :index => 0 } %>
+	<% else %>
+		<em>Scorecard not entered for this round</em>
+	<% end %>
+</div>
+
+
+<div class="subSection">
+
+	<h3>Compare</h3>
+	
+	<p>
+	Key stats for this round vs <%= username(@user, :possessive => true).downcase %> last 
+	<%= @saved_course.stats.rounds_played %> rounds at this course (<%= @round.course.name %>) vs 
+	<%= username(@user, :possessive => true).downcase %> last <%= @user.stats.rounds_played %> rounds 
+	overall (through <%= Time.now.to_formatted_s :Beyyyy %>). 
+	</p>
+	
+	<table class="stat-summary"  style="font-size: 11px; width: 600px">
+		<tr>
+			<th style="width: 200px"></th>
+			<th>This Round</th>
+			<th>This Course</th>
+			<th>Last <%= @user.stats.rounds_played %></th>
+		</tr>
+	  <% [Metric.total_holes_entered, 
+  	    Metric.pct_girs, 
+  	    Metric.avg_putts_per_hole,
+  	    Metric.avg_putts_per_hole_after_gir,
+  	    Metric.avg_par_3,
+  	    Metric.avg_par_4,
+  	    Metric.avg_par_5,
+  	    Metric.pct_fairways_hit,
+  	    Metric.max_driving_distance,
+  	    Metric.avg_driving_distance,
+  	    Metric.pct_birdies,
+  	  	Metric.pct_pars,
+  	  	Metric.pct_bogeys,
+  	  	Metric.pct_dbl_bogeys,
+  	  	Metric.pct_others,
+  	  	Metric.pct_one_putts,
+  	  	Metric.pct_two_putts,
+  	  	Metric.pct_three_putts,
+  	  	Metric.pct_fourormore_putts].each_with_index do |m, i| %>
+				<tr class="<%= i == 0  ? "" : "separator" %>">
+					<th><%= m.label %></th>
+					<td><%= @round.send(m.name.to_s + "_formatted") || "-" %></td>
+					<td><%= @saved_course.stats.send(m.name.to_s + "_formatted") || "-" %></td>
+					<td><%= @user.stats.send(m.name.to_s + "_formatted") || "-" %></td>
+				</tr>
+		<% end %>          
+	</table>
+	
+</div>
+
+<% if same_as_current_user?(@user) && params[:new] %>
+	<script>
+	  FB_RequireFeatures(["Connect"], function() {
+      FB.Facebook.init("<%= FACEBOOK_API_KEY %>", "/xd_receiver.htm"); 
+    	var attachment = <%= { 
+    		:name => "#{@round.total_score} at #{@round.course.short_name}", 
+    		:href =>  "http://#{FACEBOOK_DEFAULT_URL_OPTIONS[:host]}/round/show/#{@round.id}",
+    		:properties => {
+    			"Net score" => { :text => "#{@round.net_score || na}", :href => "http://#{FACEBOOK_DEFAULT_URL_OPTIONS[:host]}/round/show/#{@round.id}" },
+    			"Unofficial handicap" => { :text => "#{handicap(@user.stats)}", :href => "http://#{FACEBOOK_DEFAULT_URL_OPTIONS[:host]}/user/handicap/#{@user.id}" }
+    		}, 
+    		:description => sanitize(@round.comments),
+    		:caption => "{*actor*} played some golf and posted his/her score.", 
+    		:media => [ 
+    			{ 
+    				:type => 'image', 
+    				:src => "http://#{request.host_with_port}/images/fb-feed-icon-2.jpg", 
+    				:href => "http://#{FACEBOOK_DEFAULT_URL_OPTIONS[:host]}/user/blog/#{@user.id}"
+    			} 
+    		]
+    	}.to_json %>;
+    	    	
+    	var action_links = <%= [ 
+    		{ 
+    			:text => "Track your game", 
+    			:href => "http://#{FACEBOOK_DEFAULT_URL_OPTIONS[:host]}/" 
+    		} 
+    	].to_json %>;
+    	
+    	FB.Connect.streamPublish(null, attachment, action_links); 
+    }); 
+	</script>
+<% end %>

@@ -1,0 +1,92 @@
+<% content_for :title do %>Golf Game - Invite Your Friends<% end %>
+
+<style>
+
+#browse-friends {
+  border:1px solid #AAAAAA;
+  height:200px;
+  margin-bottom:10px;
+  overflow:auto;
+  padding:10px;
+  width: 350px;
+}
+
+#browse-friends ul {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+#browse-friends ul li {
+  margin-bottom: 3px;
+}
+
+</style>
+
+<div style="margin-top: 10px; margin-bottom: 15px;">
+Select the friends you want to invite from the list below. Each person you invite will be sent an 
+invitation on their home page. Only ten invites per day allowed.
+</div>
+
+<% form_remote_tag(
+		:url => {:controller => 'f8', :action => 'invite', :only_path => true},
+		:loading => 'handleSubmit();',
+		:complete => 'handleSubmitResponse(request);',
+		:html => {:id => 'post_score'}) do %>
+
+	<div id="invite-errors" class="errorBox" style="display: none"></div>
+	<div id="invite-progress" class="progressBox" style="display: none">
+		<%= image_tag "indicator_kit.gif", :align => 'top', :width => '48', :height => '16' %> Sending Invites...
+	</div>
+
+	<div id="browse-friends">
+		<ul>
+		<% @friends.sort { |a,b| a[1].name <=> b[1].name }.each do |pair| f = pair[1]%>
+			<li>
+				<% if f.is_app_user == "1" %>
+					<%= check_box_tag "n#{f.uid}", "1", false, :disabled => true %> <%= f.name %> (already has game)
+				<% else %>
+					<%= check_box_tag "u#{f.uid}" %> <%= f.name %>
+				<% end %>
+				
+			</li>
+		<% end %>
+		</ul>
+		<br clear="left" />
+	</div>
+		
+	<%= submit_tag "Send Invites", :id => 'invite-button', :class => 'inputsubmit' %> or 
+	<%= link_to_function "Cancel", :onclick => "top.location.href='http://#{FACEBOOK_DEFAULT_URL_OPTIONS[:host]}/f8'" %>
+
+	
+<% end %>
+
+
+
+<script>
+ function handleSubmit() {
+ 	$('invite-errors').update('').hide();
+ 	$('invite-progress').show();
+ 	$('invite-button').disable(); 
+ }
+ 
+ function handleSubmitResponse(request) {
+ 	$('invite-button').enable();
+ 	$('invite-progress').hide();
+
+ 	var rtn = eval('(' + request.responseText + ')');
+ 	if (rtn.saved == true) {
+ 	  top.location.href = rtn.confirm_url;
+ 	} else {
+ 	  var errors = rtn.errors; 
+ 	  var errorHTML = "<h1><%= random_frustration %> There was a problem</h1>";
+ 	  errorHTML += "<ul>";
+ 	  for (i = 0; i < errors.length; i++) {
+ 	    errorHTML += "<li>" + errors[i] + "</li>";
+ 	  }
+ 	  errorHTML += "</ul>";
+ 	  $('invite-errors').update(errorHTML).show().scrollTo();
+    }
+ }
+</script>
+

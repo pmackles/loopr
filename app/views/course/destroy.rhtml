@@ -1,0 +1,10 @@
+<p>
+Are you sure you want to remove <strong><%= @course.name %></strong> from the database?
+</p>
+
+<% form_for(:course, @course, :url => { :action => :destroy }) do |f| %>
+	<% if @rounds.any? || @saved_courses.any? %>
+		Transfer rounds and saved_courses to: <%= text_field_tag :to_course_id %>
+	<% end %>
+	<%= submit_tag("Yes") %> <%= link_to "cancel", course_url(@course) %>
+<% end %>

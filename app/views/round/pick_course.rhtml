@@ -1,0 +1,42 @@
+<% @page_title = "Scores / #{current_user.login} / Post Score" %>
+
+  	
+<% if @courses %>
+  	<% if @courses.empty? %>
+  		<div class="importantMessage">
+		<p><strong><%= random_frustration %></strong> No courses with 
+		<em><%= @course.name %></em> in their name.</p>
+		</div>
+		
+		You can:
+		<ul>
+		  <li><%= link_to("Search again", :action => 'new') %> if you think you might
+		  have entered the wrong name.</li>
+		  <li><%= link_to("Add a new course named <em>#{@course.name}</em>", 
+		       :action => 'new2') %> to our database</li>
+		</ul>
+
+  	<% else %>
+  		<p>
+  		Here are all of the courses with <b><%= @course.name %></b>
+  		in their name. If you see your course, click on it to continue
+  		posting your score.
+  		</p>
+  		<ul>
+  		<% for c in @courses %>
+  			<li>
+  			<%= link_to(c.name, :action => 'new2', 
+  					    'course[id]' => c.id) %> - <%= c.state %>
+  			</li>
+  		<% end %>
+  		</ul>
+		<p>
+		<b><%= random_frustration %></b> I can't find my course! You can always 
+		<%= link_to("add it to our database", :action => 'new2') %>
+		while you are posting your score (it takes just a few extra seconds).
+  		</p>
+	<% end %>
+
+<% end %>
+
+

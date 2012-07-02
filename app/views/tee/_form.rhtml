@@ -1,0 +1,35 @@
+<table border="0" cellspacing="5">
+ <tr>
+  <td class="fieldLabel" align="right" nowrap>Name:</span></td>
+  <td><%= text_field('tee', 'name', :size => 10) %> (e.g. Blue, Gold, Red ...)</td>  
+ </tr>
+
+ <tr>
+  <td class="fieldLabel" align="right" nowrap>Yardage:</span></td>
+  <td><%= text_field('tee', 'yardage', :size => 5) %></td>  
+ </tr>
+
+ <tr>
+  <td class="fieldLabel" align="right" nowrap>Par:</span></td>
+  <td><%= text_field('tee', 'par', :size => 2) %></td>  
+ </tr>
+
+ <tr>
+  <td class="fieldLabel" align="right" nowrap>Rating:</span></td>
+  <td><%= text_field('tee', 'mens_rating', :size => 4) %></td>  
+ </tr>
+
+ <tr>
+  <td class="fieldLabel" align="right" nowrap>Slope:</span></td>
+  <td><%= text_field('tee', 'mens_slope', :size => 4) %></td>  
+ </tr>
+ 
+ <tr>
+  <td></td>
+  <td>
+ 	<%= submit_tag(@tee.new_record? ? "Add Tee" : "Update Tee") %>
+  </td>
+ </tr>
+</table>
+<%= hidden_field 'course', 'id' %>
+

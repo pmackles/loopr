@@ -1,0 +1,10 @@
+<div class="user_edit">
+  <%= form_input :hidden_field, 'form', :value => 'edit' %>
+
+  <table>
+    <%= form_input :text_field, "email" %>
+    <% if submit %>
+      <%= form_input :submit_button, 'change_email' %>
+    <% end %>
+  </table>
+</div>

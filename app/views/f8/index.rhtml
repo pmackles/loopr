@@ -1,0 +1,103 @@
+<% current_channel "home" %>
+
+<style>
+#friend-list li img {
+  float: left;
+  width: 50px;
+  margin-right: 5px;
+}
+
+#friend-list li {
+  width: 190px;
+  margin-right: 8px;
+  margin-bottom: 5px;
+}
+
+.stat-leader .stat {
+  font-size: 9px;
+  color: #666666;
+}
+
+#stat-leader-list li {
+  margin-bottom: 7px;
+}
+
+</style>
+
+<div class="clearfix">
+
+	<div style="margin-bottom: 15px">
+	While you were sleeping, everyone else was playing golf. See how they scored below or just see what is happening with <%= link_to("your game", blog_url(:id => @user)) %>. 
+	</div>
+
+	<div style="width: 400px; float: left">
+
+			<div class="header">
+				<h2>Rounds</h2>
+			</div>
+			
+		<div id="round-filter-links">
+			From: 
+			<a href="#" id="your-friends-link" class="current">Your Friends</a> |
+			<a href="#" id="your-courses-link">Your Courses</a> |
+			<a href="#" id="everyone-link">Everyone</a>
+			<span id="progress" style="display: none; padding-left: 35px;">
+				Loading rounds...
+			</span>
+		</div>
+		<div id="rounds" class="rounds-list">
+			<%= render :partial => 'rounds/list', :object => @rounds %>
+		</div>
+	</div>
+	
+	<div style="float: left; margin-left: 20px; width: 190px; border-left: 1px solid #eee;">
+	
+		<div style="margin-bottom: 15px">	
+			<div class="header">
+				<h2>Friends with Game</h2>
+			</div>
+	
+			<div style="padding-left: 5px">
+			<% if @friends.empty? %>
+				Like real golf, Golf Game is more fun 
+				when played with your friends. 
+				<%= link_to "Invite them to join", f8invite_url() %>
+				so you can fill out your leaderboard and easily keep track of one another's games.	
+			<% else %>
+				You have <%= pluralize(@friends.length, "friend") %> with game. <%= link_to "Invite some more", f8invite_url() %>.
+				<ul class="plainList" id="friend-list" style="margin-top: 10px">
+					<% @users.each do |u| %>
+						<li>
+							<div class="clearfix">
+								<%= link_to(fb_profile_pic(u), blog_url(:id => u)) %>
+								<div class="friend-info">
+									<b><%= link_to fb_name(u), blog_url(:id => u) %></b><br />
+									<% if u.stats %>
+										Rounds Posted: <%= rounds_posted(u.lifetime_stats) %><br />
+										Handicap: <%= handicap(u.stats) %><br />
+									<% else %>
+										Rounds Posted: 0<br />
+										Scoring Average: NA<br />
+										Low Score: NA</br />
+									<% end %>		
+								</div>
+							</div>
+						</li>
+					<% end %>
+				</ul>
+			<% end %>
+			</div>
+		</div>
+	
+	</div>
+
+</div>
+
+<script>
+
+var f = new Loopr.RoundList('/f8/rounds/list');
+f.addButton("everyone-link");
+f.addButton("your-courses-link", { courses: '<%= @courses.collect { |c| c.id }.join(",") %>' });
+f.addButton("your-friends-link", { users: '<%= @users.collect { |u| u.id }.join(",") %>' });
+
+</script>

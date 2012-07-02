@@ -1,0 +1,50 @@
+<% title @group.name + ": Invite" %>
+<% current_tab "settings" %>
+
+<h2>Invite New Members</h2>
+	
+<div class="subSection">
+		
+	<p>
+	Enter the e-mail address of the person you'd like to invite below. We'll
+	send them a message which includes a link to join LOOPR. If they decide
+	to join, they will be automatically added to this group.
+	</p>
+
+	<%= error_messages_for 'invite' %>
+	
+	<% form_for(:invite, @invite, :url => { :action => 'invite' }) do |f| %>
+		<table>
+		 <tr>
+		  <td class="fieldLabel">From:</td>
+		  <td><%= current_user.email %></td>
+		 </tr>
+		 
+		 <tr>
+		  <td class="fieldLabel">To:</td>
+		  <td><%= text_field 'invite', 'recipient', :size => 40 %></td>
+		 </tr>
+
+		 <tr>
+		  <td class="fieldLabel">Subject:</td>
+		  <td><%= GroupMailer::SUBJECT %></td>
+		 </tr>
+		 			
+		 <tr>
+		  <td class="fieldLabel" valign="top">Message:</td>
+		  <td><%= text_area 'invite', 'body', :rows => 8, :cols => 40  %></td>
+		 </tr>
+		 
+		 <tr>
+		  <td></td>
+		  <td><%= submit_tag "Send Invite" %></td>
+		 </tr>
+		</table>
+	<% end %>
+		
+	<p>
+		<%= link_to("Return to main admin page", :action => :settings, :id => @group) %>
+	</p>
+	
+</div>
+

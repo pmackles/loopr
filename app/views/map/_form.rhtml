@@ -1,0 +1,19 @@
+<%= error_messages_for 'map' %>
+
+<!--[form:map]-->
+<p><label for="map_latitude">Latitude</label><br/>
+<%= text_field 'map', 'latitude'  %></p>
+
+<p><label for="map_longitude">Longitude</label><br/>
+<%= text_field 'map', 'longitude'  %></p>
+
+<p><label for="map_zoom">Zoom</label><br/>
+<%= text_field 'map', 'zoom'  %></p>
+
+<p><label for="map_name">Name</label><br/>
+<%= text_field 'map', 'name'  %></p>
+
+<%= hidden_field 'map', 'course_id' %>
+
+<!--[eoform:map]-->
+

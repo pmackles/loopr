@@ -1,0 +1,8 @@
+<% title username(@user, :possessive => true) + " Game: Stat Summary" %>
+<% current_tab "stats" %>
+
+<h2>Stat Summary</h2>
+
+<%= render :partial => "round_filter", :object => :filter, :locals => { :courses => @user.saved_courses.of_type(0).collect { |sc| sc.course }, :users => [@user] } %>
+<%= render :partial => "summary", :locals => { :users => [@user] } %>
+

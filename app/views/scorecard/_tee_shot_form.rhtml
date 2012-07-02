@@ -1,0 +1,35 @@
+
+
+<div style="position: relative">
+	<div class="tee-shot-form" id="tee_shot_form_<%= score.hole %>" style="display: none"> 
+		<div class="close-button">
+				<%= image_tag "close_button.gif", :width => 15, :height => 15, :id => "tee_shot_form_#{score.hole}_close" %>
+		</div>
+		<div class="title">Hole #<%= score.hole + 1 %></div>
+		
+		<div class="tee-shot-form-middle">
+			<table>
+				<tr>
+					<td>Club:</td>
+					<td>
+						<%= select(:score, :tee_shot_club, Score::CLUBS, {:prompt => '-'}, :index => score.hole) %>
+					</td>
+				</tr>
+	
+				<tr>
+				<td>Result:</td>
+				<td>
+					<%= select(:score, :fairway, Score::DIRECTIONS, {:prompt => '-'}, :index => score.hole) %>
+				</td>
+				</tr>
+				
+				<tr>
+					<td>Distance:</td>
+					<td><%= text_field :score, :tee_shot_distance, :size => "3", :maxlength => "3", :index => score.hole %></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+
+				

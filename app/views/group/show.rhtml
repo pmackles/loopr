@@ -1,0 +1,70 @@
+<% title @group.name + ": Overview" %>
+<% current_tab "overview" %>
+
+<div style="float: left; width: 375px">
+	<div class="subSection">
+		<% if @outings.nil? || @outings.empty? %>
+			No rounds yet.
+			<% if @group.member?(current_user) %>
+				Rounds posted by group members will automatically appear here.
+			<% end %>
+		<% else %>
+			<h3>Recent Rounds</h3>
+			<ul class="plainList">
+				<% @outings.keys.sort { |a,b| b.date_played <=> a.date_played }.each_with_index do |o,i| %>
+					<li class="round-headline <%= "round-headline-separator" unless i == 0 %>">
+						<%= render(:partial => 'outing', :object => o) %>
+					</li>
+				<% end %>
+			</ul> 		
+		<% end %>
+		
+	</div>
+</div>
+
+ <div style="margin-left: 400px; width: 210px;">
+	<div class="subSection">
+		<h3>About</h3>
+
+	 	<% unless @group.description.blank? %>
+			<%= sanitize(@group.description) %>
+		<% end %>	
+	</div>
+
+	<div class="subSection">
+		<h3>Stat Leaders</h3>
+		
+		<ul class="plainList">
+			<% [Metric.avg_18_hole_gross_score,
+				  Metric.avg_18_hole_net_score,
+			    Metric.avg_par_3,
+			    Metric.avg_par_4,
+			    Metric.avg_par_5,
+			    Metric.pct_girs,
+			  	Metric.pct_fairways_hit,
+			  	Metric.avg_driving_distance,
+			  	Metric.avg_putts_per_hole,
+			  	Metric.pct_birdies].each do |m| %>
+				<% unless (leaders = @group.best(m)).empty? %>
+					<li>
+						<strong><%= m.label %>:</strong>
+						<% leaders.each do |u| %>
+							<table style="border-collapse: collapse; font-size: 11px; width: 200px">
+								<tr>
+									<td nowrap style="padding-left: 8px">
+										<%= username u.first %>
+									</td>
+									<td align="right">
+										<%= u.last.send(m.name.to_s + "_formatted") %>
+									</td>
+								</tr>
+							</table>
+						<% end %>
+					</li>	
+				<% end %>
+			<% end %>
+		</ul>
+	</div>
+	
+</div>
+

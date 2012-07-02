@@ -1,0 +1,17 @@
+<% current_channel "courses" %>
+<% current_tab "reviews" %>
+<% title @course.name %>
+
+<div style="width: 375px">
+	<% if @course.average_rating %>
+		<div style="margin-bottom: 20px"> 
+			<strong>Average Rating</strong>:
+			<%= Review::RATINGS[@course.average_rating.to_i - 1].first %> (<%= pluralize @course.total_reviews, "rating" %>)
+			<%= review_course_link(@course, "Write your own review") %>
+		</div>
+		<%= render(:partial => 'review/list', :object => @reviews) %>
+	<% else %>
+		Sorry, no reviews. Be the first to <%= review_course_link(@course, "review this course") %>.
+	<% end %>
+
+</div>

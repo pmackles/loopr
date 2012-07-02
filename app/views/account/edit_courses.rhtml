@@ -1,0 +1,55 @@
+<% title username(@user, :possessive => true) + " Game: Edit Courses" %>
+<% current_tab "courses" %>
+
+<div style="float: right; margin-bottom: 10px">
+	<%= link_to "Map", url_for(:controller => :user, :action => :courses, :id => @user, :only_path => false) %> | <b>List</b>
+</div>
+<br clear="right" />
+		
+<div style="width: 450px">
+	Manage your course list below. To remove a course with one or more posted rounds, remove the rounds and the course will
+	be automatically removed. 
+
+	[<%= link_to_remote_redbox("Add", 
+							  :url => {
+							  	:controller => 'course',
+							  	:action => 'picker2',
+							  	:cb => 'changeCourse',
+							  	:_session_id => session.session_id
+							  }
+							  ) %>]
+							  
+	<div id="status-message" style=""></div>
+
+	<% if @user.saved_courses.empty? %>
+		<em>Your course list is currently empty.</em>
+	<% end %>
+	
+	<div id="course-list-container">
+		<%= render :partial => "course_list", :object => @user.saved_courses %>
+	</div>
+	
+</div>
+
+<script>
+ function changeCourse(id) {
+   console.log("changeCourse id=", id);
+
+	 updater = new Ajax.Updater('course-list-container', '/account/add_course/' + id, {
+		 asynchronous:true,
+		 onLoading:function(request){ Element.addClassName("status-message", "on").update("Adding <img src=\"/images/indicator_kit.gif\" />"); window.scrollTo(0, 0) },
+		 onComplete:function(request){ new Effect.Highlight("saved-course-" + id); Element.update('status-message', "Added");  }
+	 });
+ }
+ 
+ function removeCourse(id) {
+ 	 console.log("removeCourse id=", id);
+   updater = new Ajax.Updater('course-list-container', '/account/remove_course/' + id, {
+     asynchronous:true,
+     on403:function(request){ Element.update("status-message", "Save failed. Cookies probably being blocked. Check privacy settings.") }, 
+     onLoading:function(request){ Element.addClassName("status-message", "on").update("Removing <img src=\"/images/indicator_kit.gif\" />"); window.scrollTo(0, 0) }, 
+     onSuccess:function(request){ Element.update('status-message', "Removed") }
+   }); 
+ }
+</script>
+

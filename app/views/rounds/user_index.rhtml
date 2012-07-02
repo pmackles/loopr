@@ -1,0 +1,81 @@
+<% title username(@user, :possessive => true) + " Game: Rounds" %>
+<% current_tab "rounds" %>
+
+<div id="columnLeft" style="width: 170px">	
+	<ul class="plainList">
+		<li><strong>Courses</strong>
+	  	<ul class="plainList" style="font-size: 11px">
+	  	
+		  	<li>
+		  		<%= link_to_or_span(@course.nil? == true, "All Courses", rounds_url(params.merge(:course => nil))) %>
+		  		(<%= @user.lifetime_stats.rounds_played %>)
+		  	</li>
+				<% @user.saved_courses.each do |sc| c = sc.course %>
+					<% if sc.stats && sc.stats.rounds_played > 0 %>
+						<li>
+							<%= link_to_or_span(c == @course, truncate(c.short_name, 18), rounds_url(params.merge(:course => c))) %>
+							(<%= sc.stats.rounds_played %>)
+						</li>
+					<% end %>
+				<% end %>
+			</ul>
+		</li>
+	</ul>	
+</div>
+
+<div id="columnRight" style="margin-left: 180px">
+
+	<table width="98%" style="background-color: #f5f5f5; font-size: 11px" >
+		<tr>
+			<td><%= counts @rounds %></td>
+			<td style="text-align: right">
+				Sort By: 
+				<select id="sort-select-top" style="font-size: 9px">
+					<option value="<%= rounds_url(params.merge(:sort_by => :date)) %>" %>Date</option>
+					<option value="<%= rounds_url(params.merge(:sort_by => :score)) %>" <%= "selected" if (params[:sort_by] == "score") %>>Score</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+	
+	<div>
+		<ul class="plainList">
+		<% @rounds.each_with_index do |r,i| %>
+			<li class="round-headline <%= "round-headline-separator" unless i == 0 %>">
+				<%= round_headline r %>
+			</li>
+		<% end %>
+		</ul>
+	</div>
+
+	<table width="98%" style="background-color: #f5f5f5; font-size: 11px" >
+		<tr>
+			<td><%= counts @rounds %></td>
+			<td style="text-align: right">
+				Sort By: 
+				<select id="sort-select-bottom" style="font-size: 9px">
+					<option value="<%= rounds_url(params.merge(:sort_by => :date)) %>" %>Date</option>
+					<option value="<%= rounds_url(params.merge(:sort_by => :score)) %>" <%= "selected" if (params[:sort_by] == "score") %>>Score</option>
+				</select>
+			</td>
+		</tr>
+	</table>
+	
+	<div style="text-align: center; padding: 10px;">
+				<%= will_paginate @rounds, 
+							:inner_window => 1, 
+							:outer_window => 0, 
+							:params => { :only_path => false } %>
+	</div>
+</div>
+
+<script>
+  Event.observe(window, 'load', function() {
+		$('sort-select-top').observe("change", function() {
+			top.location.href = $('sort-select-top').value;
+		});
+		$('sort-select-bottom').observe("change", function() {
+			top.location.href = $('sort-select-bottom').value;
+		});
+	});
+</script>

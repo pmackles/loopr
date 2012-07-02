@@ -1,0 +1,20 @@
+<%= error_messages_for 'tip' %>
+<%= hidden_field 'tip', 'course_id' %>
+<table border="0" cellspacing="5">
+	<tr>
+	  <td class="fieldLabel" align="right" nowrap>Title:</span></td>
+	  <td><%= text_field('tip', 'title') %></td>
+	</tr>
+	
+	<tr>
+	  <td class="fieldLabel" valign="top" align="right" nowrap>Tip:</td>
+	  <td><%= text_area('tip', 'content', :cols => 40, :rows => 10) %></td>
+	</tr>
+	
+	<tr>
+	  <td></td>
+	  <td><%= submit_tag "Save" %></td>
+	</tr>
+</table>
+
+

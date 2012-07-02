@@ -1,0 +1,58 @@
+
+<div>
+	<h1 class="welcomeHeader">Welcome <%= display_name(@user) %>!</h1>
+	<div style="float: left; width: 400px; margin-top: 0px; padding-top: 5px;">
+		<%= render :partial => 'getting_started' %>
+	</div>
+
+ 	<div style="margin-left: 410px; margin-top: 0px; padding-top: 5px;">
+ 		<%= render :partial => 'whats_new' %>
+ 	</div>
+
+	<br clear="all" />
+	
+	<hr noshade />
+	
+ 	<div>
+ 		<h3>Recently Posted Rounds</h3>
+ 		<table width="100%">
+ 			<tr>
+ 				<%= render :partial =>'round_link', 
+ 						   :collection => @gstats.recent_rounds %>
+			</tr>
+		</table>
+
+ 		<hr noshade />
+ 				 		
+ 		<h3>Low Rounds</h3>
+ 		<table width="100%">						
+			<tr>
+
+ 				<%= render :partial =>'round_link', 
+ 						   :collection => @gstats.low_rounds %>
+	 		</tr>
+	 	</table>	 			
+	</div>
+	
+ 	<hr noshade />
+ 	
+ 	<div style="text-align: left; margin-top: 20px;">
+ 		<%= render :partial => 'community_stats', :object => @gstats %>
+ 	</div>
+
+	<hr noshade />
+	
+ 	<div style="margin-top: 20px;">
+ 		<%= render :partial => 'course/course_trivia' %>
+	</div>
+	 	
+ </div>
+
+
+
+
+
+
+
+
+

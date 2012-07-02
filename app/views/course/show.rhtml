@@ -1,0 +1,138 @@
+<% current_channel "courses" %>
+<% current_tab "overview" %>
+<% title @course.name %>
+<% description "Complete information on #{@course.name} in #{@course.city}, #{@course.state} including aerial shots, ratings, driving directions and more." %>
+
+
+<% if @course.created_by %>
+	<div style="font-size: 10px; margin-bottom: 10px;">
+		Originally posted by <%= link_to display_name(@course.created_by), 
+										 :controller => 'user', 
+										 :action => 'blog',
+										 :id => @course.created_by %>.
+		Last updated <%= @course.updated_at.to_formatted_s(:mmddyyyy) %>
+	</div>
+<% end %>
+
+<div>	
+	<div class="subSection">
+	  	<table width="100%">
+	  		<tr>
+		  		<td valign="top" width="400">
+					<% if @course.mappable? || admin? %>
+						<div>
+		    				<div id="map" style="width: 450px; height: 350px;">
+		    					<div class="loading">Loading...</div>
+		    				</div>
+		    				<div style="width: 450px; text-align: center; margin-top: 3px;">
+		    					<%= image_tag "icons/zoom-in.gif", :style => "margin-bottom: -3px" %>
+		    					<%= link_to("Wide Screen", 
+		    								{:action => 'aerial', :id => @course},
+		    								:id => 'go-big-btn') %>
+		    					<% if admin? %>
+			    					<%= link_to_function "Save Map",
+			    							"new Ajax.Request('/course/update_geo/#{@course.id}?lat=' + map.getCenter().lat() + '&lng=' + map.getCenter().lng() + '&zoom=' + map.getZoom(), {asynchronous:true, evalScripts:true})"
+			    					%>		
+								<% end %>
+		    				</div>
+						</div>
+		    		<% else %>
+		    			<div style="width: 450px; height: 250px; text-align: center; background-color: #ddd">
+		    				<div style="padding-top: 100px;">
+		    					Pardon our dust, we don't yet have an aerial view for this course
+		    				</div>
+		    			</div>
+					<% end %>
+				</td>
+		
+				<td valign="top">			
+
+					<div style="padding-left: 3px;">
+						<%= vcard(@course.name, @address) %>
+						<%= link_to "Get Directions", { :action => 'directions', :id => @course }, :target => 'directions' %> 	  
+					</div>
+
+					<div style="padding-left: 3px; margin-top: 8px">
+						<ul class="plainListNoIndent">
+							<li>
+								<strong>Web</strong>: 
+								<% if @course.url %>
+									<%= link_to truncate(URI.parse(@course.url).host, 50), @course.url %>
+								<% else %>
+									<%= na %>
+								<% end %>
+							<li>
+					   			<strong>Type</strong>: <%= Course::CLUB_TYPES.index(@course.club_type) %>
+							</li>
+							<li>
+					   			<strong>Year Built</strong>: <%= @course.year_built || na %>
+							</li>
+							<li>
+					   			<strong>Course Designer</strong>: <%= @course.designer || na %>
+							</li>			
+							<li>
+					   			<strong>Holes</strong>: <%= @course.number_of_holes || na  %>
+							</li>	
+							<li>
+					   			<strong>Par</strong>: <%= @course.par || na %>
+							</li>	
+							<li>
+					   			<strong>Length</strong>:
+					   			<% if @course.yards %>
+					   				<%= @course.yards %> <%= @course.length_units %> from the tips
+					   			<% else %>
+					   				<%= na %>
+					   			<% end %> 
+							</li>	
+						</ul>
+
+						<%# unless @course.description.blank? %>
+							<%# RedCloth.new(@course.description).to_html %>
+						<%# end %>
+												
+						<% if admin? %>
+							<%= link_to "Edit", :action => 'edit', :id => @course %> | 
+							<%= link_to "Edit Tees", :controller => 'tee', :action => 'edit', :id => @course %> |
+							<%= link_to "Edit Holes", :controller => 'scorecard', :action => 'edit', :id => @course %> | 
+							<%= link_to "Copy", :action => 'new', :id => @course %>
+						<% end %>
+					</div>	
+				</td>
+			</tr>
+	  	</table>		
+	
+	  </div>
+
+
+	<table width="750px">
+		<tr>
+			<td style="width: 375px; vertical-align: top; padding: 0 5px;">	  
+				<h2>Rounds</h2>
+				<% if @rounds.any? %>
+					<%= render :partial => 'rounds/list', :object => @rounds %>
+					<%= link_to "See all rounds", course_rounds_url(:id => @course) %> or
+					<%= post_round_for_course_link @course, "post your own" %>.
+				<% else %>
+					No rounds posted for this course. Get it started by <%= post_round_for_course_link @course, "posting your round" %>.
+				<% end %>
+		  </td>
+
+			<td style="width: 375px; vertical-align: top; padding: 0 5px;">  	  
+			</td>
+		</tr>	
+	</table>
+
+</div>
+
+<% if @course.mappable? || admin? %>
+	<%= gmaps_javascript_include %>
+	<%= javascript_include_tag "maputils" %>
+	<script type="text/javascript">
+	  var map = initializeMap(new GLatLng(<%= @course.latitude || 0 %>, <%= @course.longitude || 0 %>), <%= @course.zoom || 14 %>, null, false);
+	  Event.observe($('go-big-btn'), "click",
+	  		 function () {
+	  		 	var latLng = map.getCenter();
+	  		 	this.href += '?lat=' + escape(latLng.lat()) + "&lng=" + escape(latLng.lng());
+	  }, false);
+	</script>
+<% end %>

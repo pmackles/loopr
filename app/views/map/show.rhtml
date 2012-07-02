@@ -1,0 +1,56 @@
+<script 
+	src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAABSThqcktXma1YprD8XBJWBTs36aBY2E2sFC25fTajhhNcRKeUxRSZvDzafUzGA0JA8L6aKBSmB7O2g" 
+	type="text/javascript">
+</script>
+    
+<h2 class="breadcrumb">
+	<%= link_to(@map.course.name, :controller => 'course', 
+		:action => 'show', :id => @map.course) %> / 
+	<%= @map.name %>
+</h2>
+
+<div>
+<div id="map" style="width: 500; height: 400;">
+</div>
+</div>
+
+<script type="text/javascript">
+
+	function getMapInfo(form) {
+      form.latitude.value = map.getCenter().lat();
+      form.longitude.value = map.getCenter().lng();
+      form.zoom.value = map.getZoom();
+	  return true;
+	}
+	
+    function loadMap(elementName, lat, lng, zoom) {
+      var map = new GMap2(document.getElementById(elementName), { mapTypes: [G_SATELLITE_MAP], size: {width: 500, height: 400}});
+      map.setCenter(new GLatLng(lat, lng), zoom);
+      map.addControl(new GSmallMapControl());
+      return map;
+    }
+    
+    var map = loadMap('map', <%= @map.latitude %>, <%= @map.longitude %>, <%= @map.zoom %>);
+
+/* 
+    var hole1 = new GMarker(new GPoint(-74.65257167816162, 40.277299305989864));
+    map.addOverlay(hole1);
+   
+ GEvent.addListener(map, 'click', function(overlay, point) {
+  if (overlay) {
+    map.removeOverlay(overlay);
+  } else if (point) {
+    var marker = new GMarker(point)
+    map.addOverlay(marker);
+      var html = "Marker #<b>" + point + "</b>";
+     GEvent.addListener(marker, "click", function() {
+         marker.openInfoWindowHtml(html);
+  });
+  }
+});
+*/
+
+</script>
+
+
+ 

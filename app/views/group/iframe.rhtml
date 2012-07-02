@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html>
+
+	<head>
+	  <title>LOOPR</title>
+	  <%= stylesheet_link_tag 'scorecard' %>
+	  <base href="<%= url_for :only_path => false %>" target="_top">
+	</head>
+	<body>
+		<%= render :partial => 'course/scorecard' %>
+	</body>
+</html>
+
+

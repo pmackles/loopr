@@ -1,0 +1,57 @@
+
+<div style="width: 500px; padding: 1em;">
+	<%= link_to_function image_tag("close_button.gif"), "RedBox.close()", :id => "RB_close" %>
+	<h2 class="breadcrumb">E-mail This</h2>
+
+	<div id="confirm" style="color: green; display: none;">
+		Message Sent. 
+		<%= link_to_close_redbox("Continue what I was doing") %>.
+	</div>
+	
+	<div id="email-this">
+		<div id="status" style="color: green; display: none;">
+			<%= image_tag "indicator_kit.gif", 
+						  :align => 'top', 
+						  :width => '48', :height => '16' %> Sending...
+		</div>
+			
+		<div id="errors" style="color: red; display: none;">
+			<p>'From' and 'To' must be valid email addresses.</p>
+		</div>
+			
+		<%= form_remote_tag(:url => {
+								:action => 'deliver'
+							},
+							:complete => 'EmailThis.complete(request)',
+							:before => 'EmailThis.before()',
+							:html => { :id => 'email-this-form' }
+							) %>
+			<table>
+			 <tr>
+			  <td class="fieldLabel">From:</td>
+			  <td><%= text_field_tag 'from', nil, :size => 40 %></td>
+			 </tr>
+			 
+			 <tr>
+			  <td class="fieldLabel">To:</td>
+			  <td><%= text_field_tag 'to', nil, :size => 40 %></td>
+			 </tr>
+		
+			 <tr>
+			  <td class="fieldLabel" valign="top">Message:</td>
+			  <td><%= text_area_tag 'msg', nil, :rows => 8, :cols => 40  %></td>
+			 </tr>
+			 
+			 <tr>
+			  <td></td>
+			  <td><%= submit_tag "Go" %></td>
+			 </tr>
+			</table>
+			
+			<%= hidden_field_tag 'item_id', params[:item_id] %>
+			<%= hidden_field_tag 'item_type', params[:item_type] %>
+			
+		<%= end_form_tag %>
+	</div>
+	
+</div>

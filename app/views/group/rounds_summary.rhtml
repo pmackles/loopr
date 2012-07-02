@@ -1,0 +1,11 @@
+<% title @group.name + ": Stats" %>
+<% current_tab "stats" %>
+
+<div class="subSection">
+	<h2>Stat Summary</h2>
+
+	<%= render :partial => "rounds/round_filter", :object => @filter, :locals => { :courses => @group.courses, :users => @group.members } %>
+	<%= render :partial => "rounds/summary", :object => @summary, :locals => { :users => @group.members } %>
+</div>
+
+

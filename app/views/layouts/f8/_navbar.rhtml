@@ -1,0 +1,34 @@
+<% if logged_in? %>
+	<div id="logged-in"></div>
+<% else %>
+	<div id="not-logged-in" style="display: none;">
+		<p>
+			Please <%= link_to "login", controller.fbsession.get_install_url, :target => "_top" %> to the app
+		</p>
+	</div>
+<% end %>
+
+<div class="dh_links clearfix" style="margin-bottom: 10px">
+  <div style="float: right; color: green; font-weight: bold; font-size: 12px; padding-right: 15px;">
+  <%= image_tag "/images/fb_small_icon.gif" %> Golf Game
+  </div>
+  
+	<div class="dh_actions clearfix">
+		<%= link_to_or_span(yield(:current_channel) == "home", "Home", url_for(:controller => '/', :only_path => false)) %>
+		|
+		<% if %w(user stats round rounds).include?(controller.controller_name) && same_as_current_user?(@user) %>
+			<%= link_to "My Game", blog_url(:id => current_user), :class => "selected" %>
+		<% else %>
+			<%= link_to "My Game", blog_url(:id => current_user) %>
+		<% end %>
+		|
+		<%= link_to_or_span((yield(:current_channel) == "courses" || controller.controller_name == "courses"), "Courses", courses_url()) %>
+	</div>
+</div>
+
+
+			
+
+
+
+

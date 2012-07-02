@@ -1,0 +1,31 @@
+<% title "Edit Icon" %>
+<% current_tab "settings" %>
+
+<h2>Edit Group Icon</h2>
+
+<div class="subSection">
+
+	<%= error_messages_for 'group' %>
+
+  <% form_for(:group, @group, :url => { :action => :edit_icon, :id => @group }, :html => { :multipart => true} ) do |f| %>
+		<table border="0" cellspacing="5">
+			<tr>
+				<td class="fieldLabel" valign="top" nowrap>Current Icon:</td>
+				<td><%= image_tag(group_icon_path(@group), :width => 48, :height => 48, :id => "current-icon") %>
+			</tr>
+			<tr>
+				<td></td>
+				<td><%= file_field_tag "file" %></td>
+		  </tr>
+		  <tr>
+		  	<td></td>
+		  	<td><%= submit_tag "Upload New Icon" %></td>
+		  </tr>
+		</table>
+	<% end %>
+
+	<p>
+		<%= link_to("Return to main admin page", :action => :settings, :id => @group) %>
+	</p>
+	
+</div>

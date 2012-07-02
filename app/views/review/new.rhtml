@@ -1,0 +1,28 @@
+<div style="width: 500px; padding: 1em;">
+	<%= link_to_function image_tag("close_button.gif"), "RedBox.close()", :id => "RB_close" %>
+	<br clear="all" />
+	<h2 class="breadcrumb">Review <%= @review.course.short_name %></h2>
+
+	<div id="status" style="color: green; display: none;">
+		<%= image_tag "indicator_kit.gif", :align => 'top', :width => '48', :height => '16' %> Sending...
+	</div>
+	
+	<div id="errors" style="color: red">
+	</div>
+	
+	<div>
+		<p>
+		Tell us what you think of <b><%= @review.course.short_name %></b>. 
+		Rate the course from 1-5 (5 being the best) and then write some
+		comments to explain your rating. Please keep the comments clean
+		and focused on the course (as opposed to your inconsiderate buddy
+		who walked on your line and cracked jokes while you were teeing off).
+		</p>
+		<%= form_remote_tag :url => {:action => 'create'},
+							:complete => 'Reviews.complete(request)',
+							:before => 'Reviews.before()' %>
+		  <%= render_partial 'form' %>
+		<%= end_form_tag %>
+	</div>
+</div>
+

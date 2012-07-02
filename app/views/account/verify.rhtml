@@ -1,0 +1,10 @@
+<div class="dialog">
+	<div style="margin-bottom: 30px">
+		<h1 class="welcomeHeader">Verified!</h1>
+	</div>
+	
+	<p>
+	Thanks <%= h display_name(current_user) %>! Your account has been verified. 
+	<%= link_to "Continue", :controller => 'user', :action => 'blog', :id => current_user %>.
+	</p>
+</div>

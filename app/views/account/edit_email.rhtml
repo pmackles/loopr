@@ -1,0 +1,22 @@
+<% title "Edit Email" %>
+<% supress_ads %>
+
+<div id="columnLeft">
+	<%= render(:partial => 'settings_menu') %>
+</div>
+
+<div id="columnRight">
+  <p>
+	You can update your email address below. We won't sell, rent, lose or leak it. Promise.
+  </p>
+  
+  <%= error_messages_for 'user' %>
+  
+  <p>
+  <%= start_form_tag({:action => 'edit_email'}) %>
+    <span class="fieldLabel">Email Address:</span><br /><br />
+    <%= text_field ('user', 'email') %>
+    <p><%= submit_tag "Save Changes" %></p>
+  <%= end_form_tag %>
+  </p>
+</div>

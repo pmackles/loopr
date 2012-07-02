@@ -1,0 +1,140 @@
+
+<div id="grid-wrapper-<%= index %>">
+  <table class="grid">
+
+   <tr id="hole_numbers" class="top-row">
+    <th class="top-left" style="">Hole</th>
+    <% (0..17).each { |h| %>
+      <td><%= h + 1 %></td>
+    <% } %>
+    
+    <td>Out</td>
+    <td>In</td>
+    <td>Tot</td>
+    <td>Hcp</td>
+    <td class="top-right" style="">Net</td>
+   </tr>
+	       
+   <tbody>
+     <tr>
+   	  <th>Par</th>
+   	  <% scorecard.holes.each do |h| %>
+      	<td><%= h.par || "-" %></td>
+      <% end %>
+      
+      <td><%= scorecard.total_par 0..8 %></td>
+      <td><%= scorecard.total_par 9..17 %></td>
+      <td><%= scorecard.total_par %></td>	
+      <td></td>
+      <td style="border-right-width: 1px; border-right-color: #000"></td>    
+     </tr>
+     
+   </tbody>
+   
+   <% unless scorecard.rounds.nil? %>
+	   <tbody>
+
+		    <tr>
+		      <th>
+			    	Score
+		      </th>
+
+		      <% (0..17).each { |h| s = r.scores[h] %>
+		        <td class="<%= css_style_for_score(s) %>">
+			        <% if s && s.score %>
+			        	<%= s.score %>
+			        <% else %>
+			        	-
+			        <% end %>
+		        </td>
+		     <% } %>
+		      
+		      <td><%= scorecard.total_score(index, 0..8) || "-" %></td>
+		      <td><%= scorecard.total_score(index, 9..17) || "-" %></td>
+		      <td><%= scorecard.total_score(index) || "-" %></td>
+		      <td><%= r.course_handicap || "-" %></td>
+      		<td style="border-right-width: 1px; border-right-color: #000"><%= r.net_score || "-" %></td>    	      	      
+		    </tr>
+		    
+		    <tr>
+		      <th>
+		      	Putts
+		      </th>
+		      <% (0..17).each { |h| s = r.scores[h] %>
+		        <td>
+		        	<% if s && s.putts %>
+		        		<%= s.putts %>
+		        	<% else %>
+		        		-
+		        	<% end %>
+		        </td>
+		      <% } %>
+		      <td><%= r.total_putts(0..8) || "-" %></td>
+		      <td><%= r.total_putts(9..17) || "-" %></td>
+		      <td><%= r.total_putts || "-" %></td>
+		      <td></td>
+      		<td style="border-right-width: 1px; border-right-color: #000"></td>   
+		    </tr>
+
+		    <tr>
+		      <th>
+		      	Penalty
+		      </th>
+		      <% (0..17).each { |h| s = r.scores[h] %>
+		        <td>
+		        	<% if s && s.penalty_strokes %>
+		        		<%= s.penalty_strokes %>
+		        	<% else %>
+		        		-
+		        	<% end %>
+		      	</td>
+		      <% } %>
+		      <td><%= r.total_penalty(0..8) || "-" %></td>
+		      <td><%= r.total_penalty(9..17) || "-" %></td>
+		      <td><%= r.total_penalty || "-" %></td>
+		      <td></td>
+          <td style="border-right-width: 1px; border-right-color: #000"></td>   	 
+		    </tr>
+
+		    <tr>
+		      <th>
+		      	GIR
+		      </th>
+		      <% (0..17).each { |h| s = r.scores[h] %>
+		        <td>
+		        	<% if s && s.gir? %>
+		        		<%= image_tag 'checkmark.gif', :alt =>'Y' %>
+		        	<% end %>
+		        </td>
+		      <% } %>
+		      <td><%= r.total_girs(0..8) || "-" %></td>
+		      <td><%= r.total_girs(9..17) || "-" %></td>
+		      <td><%= r.total_girs || "-" %></td>
+		      <td></td>
+      		<td style="border-right-width: 1px; border-right-color: #000"></td>   	 
+		    </tr>
+
+		    <tr class="bottom-row">
+		      <th nowrap valign="top" class="bottom-left">
+		      	Tee Shot
+		      </th>
+		      <% (0..17).each { |h| s = r.scores[h] %>
+		        <td style="padding: 0 0"><%= tee_shot s %></td>
+		      <% } %>
+		      <td></td>
+		      <td></td>
+		      <td></td>
+		      <td></td>
+      		<td class="bottom-right"></td>   	 
+		    </tr>		    		    
+			    
+			</tbody>
+		<% end %>
+
+
+  	</table> 	
+</div>
+
+
+
+	    	

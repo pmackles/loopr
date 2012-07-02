@@ -1,0 +1,33 @@
+<% title "Search" %>
+<% robots "noindex,nofollow" %>
+<div style="width: 450px">
+	
+		
+	<% if params[:q] %>
+		<div class="errorBox">
+		<span>Whoops! You're search for <b><%= h params[:q] %></b> didn't match anything.</span>
+		</div>
+	<% end %>
+		
+	<div>
+		You can search our course directory by name or 
+		<%= link_to "by location", :action => :map %>. 
+		To search by name, enter any part of the course 
+		name below. The more specific the better.
+	</div>
+	
+	
+	<div style="margin: 15px 0 15px 0">
+		<% form_tag(courses_search_url(), :method => :get, :id => 'search-form') do %>
+			<b>Search</b>:
+			<%= text_field_tag :q, params[:q], :size => 48 %>
+			<%= submit_tag "Go" ,:name => nil  %><br />
+		<% end %>
+	</div>
+
+</div>
+
+	
+
+
+

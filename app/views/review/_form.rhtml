@@ -1,0 +1,20 @@
+<%= error_messages_for 'review' %>
+<%= hidden_field 'review', 'type_id' %>
+<table border="0" cellspacing="5">
+	<tr>
+	  <td class="fieldLabel" align="right" nowrap>Rating:</span></td>
+	  <td><%= select('review', 'rating', Review::RATINGS, { :prompt => 'Please Select'}) %></td>
+	</tr>
+	
+	<tr>
+	  <td class="fieldLabel" valign="top" align="right" nowrap>Comments:</td>
+	  <td><%= text_area('review', 'body', :cols => 40, :rows => 10) %></td>
+	</tr>
+	
+	<tr>
+	  <td></td>
+	  <td><%= submit_tag "Save" %></td>
+	</tr>
+</table>
+
+

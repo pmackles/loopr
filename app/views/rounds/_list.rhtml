@@ -1,0 +1,34 @@
+<% if list.any? %>
+	<ul class="plainList">
+		<% list.each_with_index do |r,i| %>
+				<li style="margin-bottom: 8px; padding-top: 5px" class="<%= "round-headline-separator" unless i == 0 %>">
+					<div class="clearfix">
+						<div style="float: left">
+							<%= user_icon_small r.user_icon_url %>
+						</div>
+						<div style="margin-left: 29px">
+			 			<%= link_to(display_name(:login => r.user_login, :source => r.user_source, :facebook_name => r.user_facebook_name),
+			 						blog_url(:id => r.user_id) 
+			 			) %> shot <%= (80..89).include?(r.total_score) ? "an" : "a" %>
+			 			<%= link_to r.total_score, round_url(:id => r) %> at
+			 			<%= link_to r.course_name, course_url(:id => r.course_id, :name => r.course_name) %><br />
+						<% unless r.comments.blank? %>
+							<span class="start-quote" style="font-size: 10px">
+								<span class="end-quote"><%= sanitize(r.comments)  %></span>
+							</span>
+						<% end %>
+						<span style="font-size: 10px; color: #777777">posted <%= time_ago_in_words r.created_on %> ago</span>
+						</div>
+					</div>
+	 			</li>
+		<% end %>
+	</ul>
+<% else %>
+	<div style="margin: 3px 0 8px 5px">
+		<em>Sorry, no rounds</em>
+	</div>
+<% end %>
+
+
+
+

@@ -1,0 +1,9 @@
+
+<p>
+	Search our course directory by course name:
+</p>
+
+<%= start_form_tag({:controller => 'search'}, {:method => 'GET'}) %>
+  <%= text_field_tag(:q, params[:q], :size => "40") %>
+  <%= submit_tag "Search", :name => nil %>
+<%= end_form_tag %>

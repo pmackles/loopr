@@ -1,0 +1,16 @@
+<h3>What's New?</h3>
+<p>		
+	<%= new_bug %> - Are you a Facebook user? Now you can use LOOPR on   
+ 	<%= link_to("Facebook", "http://www.facebook.com/p.php?api_key=#{FACEBOOK_API_KEY}") %>		
+</p>
+<p>		
+	<%= new_bug %> - Totally redesigned   
+ 	<%= link_to("stats", stats_url(:id => @user)) %>
+ 	page.			
+</p>
+<p>		
+	<%= new_bug %> - If you're a blogger, you can now display your 
+ 	golf stats right in the sidebar of your blog using our fancy 
+ 	<%= link_to "widgets", :controller => 'widget',
+ 				:action => 'preview' %>.			
+</p>

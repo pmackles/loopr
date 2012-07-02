@@ -1,0 +1,10 @@
+
+<%= link_to_unless_current "#{@course.name}, #{@course.state}", 
+		:action => 'show', :id => @course %> 
+<% if defined? trail %>
+	<% unless trail.nil? || trail.empty? %> 
+		/ <%= trail.join(" / ") %>
+	<% end %>
+<% end %>
+
+

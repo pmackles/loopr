@@ -1,0 +1,143 @@
+
+<div style="margin-top: 20px">
+	<form id="metric-form">	
+		<table id="current-metric" width="600px">
+			<tr>
+				<td>
+					<span id="load-progress" style="display: none">
+						<%= image_tag "indicator_kit.gif", :align => 'top', :width => '48', :height => '16' %> Loading rounds...
+					</span>
+					
+					<div id="load-summary" style="display: inline; font-style: italic"></div>
+				</td>
+				<td align="right">
+					<b>Graph:</b>&nbsp;
+
+					<select id="metric" name="metric" onchange="redraw(mainSummarizer)">
+						<% [Metric.avg_18_hole_gross_score, 
+								Metric.avg_18_hole_net_score, 
+								Metric.avg_front_9_gross_score, 
+								Metric.avg_back_9_gross_score,
+								Metric.avg_18_hole_total_putts,
+								Metric.avg_9_hole_gross_score,
+								Metric.avg_9_hole_total_putts,
+								Metric.avg_par_3, 
+								Metric.avg_par_4, 
+								Metric.avg_par_5,
+			    			Metric.total_ones,
+			    			Metric.total_eagles,
+			    			Metric.total_double_eagles,
+								Metric.pct_birdies, 
+								Metric.pct_pars,
+								Metric.pct_bogeys,
+								Metric.pct_dbl_bogeys,
+								Metric.pct_others,
+								Metric.pct_girs,
+								Metric.pct_fairways_hit,
+								Metric.avg_driving_distance,
+								Metric.max_driving_distance,
+								Metric.total_zero_putts,
+								Metric.avg_putts_per_hole,
+								Metric.avg_putts_per_hole_after_gir,
+								Metric.pct_one_putts, 
+								Metric.pct_two_putts,
+								Metric.pct_three_putts,
+								Metric.pct_fourormore_putts].each do |m| %>
+									<option value="<%= m.name %>" <%= "selected" if m.name == left.name %>><%= m.label %></option>
+						<% end %>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+		
+<div style="padding-top: 0">
+	<div id="flashcontent">
+  	<strong>You need to upgrade your Flash Player</strong>
+	</div>
+</div>
+
+
+<script>
+
+  function roundsWithData(rounds, summary_metric) {
+	  var metric = summary_metric.drill();
+	  var number_of_holes = "";
+	  if (summary_metric.props.drill) {
+	  	number_of_holes = summary_metric.props.drill.number_of_holes || "";
+	  }
+	  
+  	return rounds.select(function(r) {
+  		return r.stats[metric.name()].value != null && (number_of_holes == "" || r.total_holes == number_of_holes );
+  	});
+  } 
+	
+	function leftColMetric() {
+		return $('metric').value;
+	}
+
+	function busy(summarizer) {
+		$('load-progress').show();
+		$('load-summary').hide();
+		chart.blur();
+		// $('reports').addClassName("disabled");
+	}
+	
+	function updateLoadStatus(rounds, metric, summarizer) {
+    // title and status
+	  var load_summary = "<b>" + metric.label() + ":</b> ";
+	  if (rounds.length > 0 ) {
+		  load_summary += 
+			  summarizer.summary[0][metric.name()] + ", " +
+		    rounds.length + " rounds";				
+	  } else {
+		  load_summary += "no rounds";
+	  }
+	  
+	  $("load-summary").update(load_summary);	
+	}
+	
+	function redraw(summarizer) {
+		// console.log("in redraw()");
+		
+	  var summary_metric = Loopr.Metric[leftColMetric()];
+	  var metric = summary_metric.drill();
+
+	  var rounds = roundsWithData(mainSummarizer.rounds, summary_metric);
+		
+		chart.dataTable = rounds;
+		chart.yLeftGraph = metric;
+		chart.metric = summary_metric;
+		chart.draw();
+
+	  updateLoadStatus(rounds, summary_metric, summarizer);
+	  	
+		$('load-progress').hide();
+		$('load-summary').show();
+	}
+
+	function updateData() {
+	  mainSummarizer.load_rounds_with_summary(busy, redraw);  
+	}
+	
+  <% Metric.all.each do |m| %>
+  	Loopr.Metric['<%= m.name %>'] = new Loopr.Metric(<%= m.to_json %>);
+  <% end %>
+  
+  var mainSummarizer = new Loopr.RoundSummarizer('filter', <%= rounds.to_json %>, <%= summary.to_json %>);
+	var summary_metric = Loopr.Metric[leftColMetric()];
+	var rounds = roundsWithData(mainSummarizer.rounds, summary_metric);
+	
+  var chart = new Loopr.LineChart(
+	  "flashcontent",
+	  rounds, 
+	  "date_played", 
+	  summary_metric.drill(), 
+	  '<%= round_url(:id => nil) %>',
+	  Loopr.Metric[leftColMetric()]
+  );
+
+	updateLoadStatus(rounds, summary_metric, mainSummarizer);
+
+</script>

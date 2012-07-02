@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<% supress_ads %>
+
+<html>
+
+	<%= render :partial => 'layouts/head' %>
+
+	<body id="standard-logged-in">
+		<div id="header">
+		   	<%= link_to("<img src='/images/header2.png' width='350' height='75' />", :controller => '/') %>
+		</div id="header">
+
+		<%= render :partial => 'layouts/navbar' %>
+			
+		<br />
+		
+		<%= @content_for_layout %>
+			
+		<br clear="all" />
+			
+		<%= render :partial => 'layouts/footer' %>
+			
+	</body>
+</html>

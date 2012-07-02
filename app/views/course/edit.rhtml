@@ -1,0 +1,10 @@
+<h2>Edit Course - <%= h @course.name %></h2>
+
+<%= link_to "&laquo; Back to Course Page", :controller => 'course', :action => 'show', :id => @course %>
+
+<% form_tag :action => 'update', :id => @course do %>
+  <%= render_partial 'form' %>
+  <p>
+  <%= submit_tag 'Save' %>
+  </p>
+<% end %>

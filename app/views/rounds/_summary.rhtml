@@ -1,0 +1,228 @@
+<% pages = (0..(users.length - 1)).to_a.in_groups_of(4) %>
+<% user_hash = Hash[*users.collect { |u| [u.id, u] }.flatten] %>
+
+<div style="margin-top: 15px">
+	<span id="load-progress" style="display: none">
+		<%= image_tag "indicator_kit.gif", :align => 'top', :width => '48', :height => '16' %> Loading rounds...
+	</span>
+
+	<div id="load-summary" style="display: inline; font-style: italic">
+		<% if summary.any? %>
+			<%= pluralize(summary.sum { |s| s.total_rounds }, "round") %>,
+			<%= pluralize(summary.sum { |s| s.total_holes }, "hole") %>
+		<% else %>
+			No rounds to summarize. Try increasing the time period and/or selecting "All Courses"
+		<% end %>
+	</div>
+</div>
+
+<div id="reports" class="reports">
+
+	<div style="float: right">
+		<div id="scroller" class="pagination" style="font-size: 12px">
+			<% if pages.length > 1 %>
+				<span>&laquo; Previous</span> <%= link_to_function "Next &raquo;", "scroller.showPage(1)" %>
+			<% end %>
+		</div>
+	</div>
+	<br clear="right" />
+
+	<% pages.each_with_index do |page, pi| %>
+		<table class="stat-summary" id="page-<%= pi %>" style="<%= pi == 0 ? "" : "display: none" %>">
+			<tr>
+				<td style="width: 160px"></td>
+				<% page.each_with_index do |u,i| s = summary[(pi*4) + i] %>
+					<td id="<%= u.to_s + "_username" %>" class="data">
+						<% if s %>
+							<%= user_icon_medium(user_hash[s.user_id].icon_url) %><br />
+							<%= username(user_hash[s.user_id]) %>
+						<% end %>
+					</td>
+				<% end %>
+			</tr>
+			<tr><th colspan="<%= page.length + 1 %>" class="section-header">18 Hole Round Stats</th></tr>
+			<% [Metric.total_18_hole_rounds, 
+					Metric.avg_18_hole_gross_score,
+					Metric.avg_18_hole_net_score,
+					Metric.avg_front_9_gross_score, 
+					Metric.avg_back_9_gross_score,
+					Metric.avg_18_hole_total_putts].each do |m| %>
+				<tr>
+					<th><%= m.label %></th>
+					<% page.each_with_index do |u,i| %>
+						<td id="<%= u.to_s + "_" + m.name.to_s %>"  class="data">
+							<%= link_to_stat(summary[(pi*4) + i], m) %>
+						</td>
+					<% end %>
+				</tr>
+			<% end %>
+	
+			<tr><th colspan="<%= page.length + 1 %>" class="section-header">9 Hole Round Stats</th></tr>
+			<% [Metric.total_9_hole_rounds, 
+					Metric.avg_9_hole_gross_score,
+					Metric.avg_9_hole_total_putts].each do |m| %>
+				<tr>
+					<th><%= m.label %></th>
+					<% page.each_with_index do |u,i| %>
+						<td id="<%= u.to_s + "_" + m.name.to_s %>"  class="data">
+							<%= link_to_stat(summary[(pi*4) + i], m) %>
+						</td>
+					<% end %>
+				</tr>
+			<% end %>
+	
+			<tr><th colspan="<%= page.length + 1 %>" class="section-header">Scoring</th></tr>
+			<% [Metric.total_holes_entered,
+			    Metric.avg_par_3,
+			    Metric.avg_par_4,
+			    Metric.avg_par_5,
+			    Metric.total_ones,
+			    Metric.total_eagles,
+			    Metric.total_double_eagles,
+			    Metric.pct_birdies,
+			    Metric.pct_pars,
+			    Metric.pct_bogeys,
+			    Metric.pct_dbl_bogeys,
+			    Metric.pct_others].each do |m| %>
+				<tr>
+					<th><%= m.label %></th>
+					<% page.each_with_index do |u,i|  s = summary[(pi*4) + i] %>
+						<td id="<%= u.to_s + "_" + m.name.to_s %>"  class="data">
+							<%= link_to_stat(summary[(pi*4) + i], m) %>
+						</td>
+					<% end %>
+				</tr>
+			<% end %>
+			
+			<tr><th colspan="<%= page.length + 1 %>" class="section-header">Skills</th></tr>
+			<% [Metric.pct_girs,
+				  Metric.pct_fairways_hit,
+				  Metric.avg_driving_distance,
+				  Metric.max_driving_distance,
+				  Metric.total_zero_putts].each do |m| %>
+				<tr>
+					<th><%= m.label %></th>
+					<% page.each_with_index do |u,i| %>
+						<td id="<%= u.to_s + "_" + m.name.to_s %>"  class="data">
+							<%= link_to_stat(summary[(pi*4) + i], m) %>
+						</td>
+					<% end %>
+				</tr>
+			<% end %>
+	
+													
+			<tr><th colspan="<%= page.length + 1 %>" class="section-header">Putting</th></tr>	
+			<% [Metric.total_holes_with_putts,
+					Metric.avg_putts_per_hole,
+					Metric.avg_putts_per_hole_after_gir,
+					Metric.pct_one_putts, 
+					Metric.pct_two_putts,
+					Metric.pct_three_putts,
+					Metric.pct_fourormore_putts].each do |m| %>
+				<tr>
+					<th><%= m.label %></th>
+					<% page.each_with_index do |u,i| %>
+						<td id="<%= u.to_s + "_" + m.name.to_s %>" class="data">
+							<%= link_to_stat(summary[(pi*4) + i], m) %>
+						</td>
+					<% end %>
+				</tr>
+			<% end %>
+		</table>
+	<% end %>
+	
+</div>
+
+<script>    
+  <% Metric.all.each do |m| %>
+  	Loopr.Metric['<%= m.name %>'] = new Loopr.Metric(<%= m.to_json %>);
+  <% end %>
+  
+  users = {};
+  <% users.each do |u| %>
+  	users['<%= u.id %>'] = {};
+  	users['<%= u.id %>'].name = '<%= username u %>';
+  	users['<%= u.id %>'].icon = '<%= user_icon_path(u.icon_url) %>';
+  <% end %>
+  
+	function link_to_stat(metric, user_id, val) {
+		if (Loopr.Metric[metric].drill() == null) {
+			return val;
+		}
+
+		var params = Form.serialize('filter', true);
+		params["metric"] = metric;									
+		params["filter[users][]"] = user_id;
+		return "<a href=\"<%= user_rounds_stat_url(:id => nil) %>/" + user_id + "?" + Hash.toQueryString(params) + "\">" + val + "</a>";
+	}
+	
+	function busy(summarizer) {
+		var summary_data = summarizer.summary;
+
+		$('reports').addClassName("disabled");	
+		$('load-progress').show();
+		$('load-summary').hide();
+
+		var data_cells = $('reports').select('td.data');
+		data_cells.each(function(v) { v.update(""); } );
+		
+	}
+
+	function updateLoadSummary(summary_data) {
+		var load_summary = "";
+		var total_rounds = 0;
+		var total_holes = 0;
+		
+		for (var i = 0; i < summary_data.length; i++) {
+			total_rounds += Number(summary_data[i].total_rounds || 0);
+			total_holes += Number(summary_data[i].total_holes || 0);
+		}
+		
+		if (total_rounds > 0 ) {			
+			load_summary += total_rounds + " rounds, ";
+			load_summary += total_holes + " holes";
+		} else {
+			load_summary = "No rounds to summarize. Try increasing the time period and/or selecting \"All Courses\"";
+		}			
+		$("load-summary").update(load_summary);
+	}
+		
+	function redraw(summarizer) {
+		// console.log("in redraw() summary=", summarizer.summary);
+	  var summary_data = summarizer.summary;
+	  
+		updateLoadSummary(summary_data);
+
+		scroller.pages = Math.ceil(summary_data.length / 4.0);		
+		scroller.showPage(0);
+
+		for (var i = 0; i < summary_data.length; i++) {
+		  var user_id = summary_data[i].user_id;
+		  $(i + "_username").update("<img src=\"" + users[user_id + ""].icon + "\" width=\"48\" height=\"48\" /><br />" + users[user_id + ""].name);  
+			for (var prop in summary_data[i]) {				
+				var cell = $(i + "_" + prop);
+				if (cell) {
+					val = summary_data[i][prop];
+					if (val) {
+						cell.update(link_to_stat(prop, user_id, val));
+					} else {
+		    		cell.update("-");
+		    	}
+		  	}
+			}
+		}
+		
+		$('reports').removeClassName("disabled");
+		$('load-progress').hide();
+		$('load-summary').show();
+	}
+
+	function updateData() {
+	  summarizer.load_summary(busy, redraw);  
+	}
+	
+  var summarizer = new Loopr.RoundSummarizer();
+  var scroller = new Loopr.ReportPager();
+  scroller.pages = <%= pages.length %>;
+	
+</script>

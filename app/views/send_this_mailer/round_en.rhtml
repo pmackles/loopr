@@ -1,0 +1,5 @@
+Your friend at <%= @from %> sent you this scorecard from LOOPR.com:
+
+  <%= @base_url %>round/show/<%= @round.id %>
+
+<% unless @msg.blank? %><%= @msg %><% end -%>

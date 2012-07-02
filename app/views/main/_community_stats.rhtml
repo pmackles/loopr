@@ -1,0 +1,72 @@
+ 	<h3>Interesting But Otherwise Useless Community Stats</h3>
+
+ 	<table width="100%">
+ 		<tr>
+ 			<td valign="top">
+ 				<b>Total Rounds Logged:</b>
+ 			</td>
+ 			<td valign="top">
+ 				<%= number_with_delimiter community_stats.rounds_played %>
+ 			</td>
+
+ 			<td valign="top">
+ 				<b>Total Holes:</b>
+ 			</td>
+ 			<td valign="top">
+ 				 <%= number_with_delimiter community_stats.total_holes %>
+ 			</td>
+
+ 			<td valign="top">
+ 				<b>Total Strokes:</b>
+ 			</td>
+ 			<td valign="top">
+ 				 <%= number_with_delimiter community_stats.total_strokes %><br />
+ 			</td>
+ 		</tr>
+
+ 		<tr>
+ 			<td valign="top">
+ 				<b>Average 18 Hole Score:</b>
+ 			</td>
+ 			<td valign="top">
+ 				<%= number_with_delimiter community_stats.scoring_average %>
+ 			</td>
+
+ 			<td valign="top">
+ 				<b>Total Bogies:</b>
+ 			</td>
+ 			<td valign="top">
+ 				<%= number_with_delimiter community_stats.total_bogeys %>
+ 			</td>
+
+ 			<td valign="top">
+ 				<b>Total Pars:</b>
+ 			</td>
+ 			<td valign="top">
+ 				<%= number_with_delimiter community_stats.total_pars %>
+ 			</td>
+ 		</tr>	 		
+
+ 		<tr>
+ 			<td valign="top">
+ 				<b>Total Birdies:</b>
+ 			</td>
+ 			<td valign="top">
+ 				<%= number_with_delimiter community_stats.total_birdies %>
+ 			</td>
+
+ 			<td valign="top">
+ 				<b>Total Eagles:</b>
+ 			</td>
+ 			<td valign="top">
+ 				 <%= number_with_delimiter community_stats.total_eagles %>
+ 			</td>
+
+ 			<td valign="top">
+ 				<b>Total Holes-in-one:</b>
+ 			</td>
+ 			<td valign="top">
+ 			 	<%= number_with_delimiter community_stats.total_ones %>
+ 			</td>
+ 		</tr>
+ 	</table>	 	

@@ -1,0 +1,51 @@
+
+<div class="dialog" id="signup">
+
+	<div id="title"><h1>Signup</h1></div>
+	<div style="float: left; width: 300px">	
+		<ul class="plainList" style="list-style-type: disc">
+			<li>
+				Already a member? Then
+				<%= link_to "login", :controller => 'account', :action => 'login' %>.
+			</li>
+		</ul>
+	</div>
+
+	
+	<div style="margin-left: 320px; background-color: #ddd; padding: 10px; border: 1px solid #999">
+		<%= error_messages_for 'user' %>
+
+		<div style="margin-bottom: 5px">
+			All fields required.
+		</div>
+		
+		<% form_for(:user, @user, :action => 'signup') do |f| %>
+			<table>
+			 <tr>
+			  <td class="fieldLabel" align="right">Username:</td>
+			  <td><%= f.text_field(:login, :size => 20) %></td>
+			 </tr>
+			 <tr>
+			  <td class="fieldLabel" align="right">E-mail:</td>
+			  <td><%= f.text_field(:email, :size => 20) %>&nbsp;</td>
+			 </tr>
+			 <tr>
+			  <td class="fieldLabel" align="right">Password:</td>
+			  <td><%= f.password_field(:password, :size => 20) %></td>
+			 </tr>
+			 <tr>  
+			  <td class="fieldLabel" align="right">Password Confirm:</td>
+			  <td><%= f.password_field(:password_confirmation, :size => 20) %></td>
+			 </tr>
+			 <tr>
+			  <td></td> 
+			  <td><%= submit_tag("Sign up") %></td>
+			 </tr>
+			</table>
+		<% end %>
+	</div>
+		
+	
+
+</div>
+

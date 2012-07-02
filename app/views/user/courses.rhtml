@@ -1,0 +1,62 @@
+
+<% title username(@user, :possessive => true) + " Game: Courses: #{@view == 'map' ? 'Map' : 'List'}"  %>
+<% current_tab "courses" %>
+
+<div class="clearfix" style="margin-bottom: 10px">
+	<% if @view =="list" && same_as_current_user?(@user) %>
+		<div style="float: right">
+			<%= link_to_remote_redbox("Add Course", 
+							:url => {
+							:controller => 'course',
+							:action => 'picker',
+							:cb => 'changeCourse',
+							:qp => 0,
+							:_session_id => session.session_id
+			}) %>
+		</div>
+	<% end %>
+	
+	<div style="margin-bottom: 0px">
+		View:
+		<%= link_to_unless(@view == "map", "Map", user_courses_url(:id => @user)) { |n| "<b>#{n}</b>" } %> | 
+		<%= link_to_unless(@view == "list", "List", user_courses_url(:id => @user, :view => "list")) { |n| "<b>#{n}</b>" } %>
+	</div>
+</div>
+
+<% if @view == "map" %>
+	<%= render :partial => "saved_course/course_map", :object => @saved_courses %>
+<% else %>
+
+	<div id="status-message" style="display: none"><img src="/images/indicator_kit.gif" /> Adding...</div>
+	
+	<div id="course-list-container">
+		<%= render :partial => "saved_course/course_list", :object => @saved_courses, :locals => { :editable => same_as_current_user?(@user) } %>
+	</div>
+
+	<script>
+	 function changeCourse(id) {
+		 updater = new Ajax.Updater('course-list-container', '/saved_course/add_course/' + id + '?_session_id=<%= session.session_id %>', {
+			 asynchronous:true,
+			 onLoading:function(request){ Element.show("status-message"); window.scrollTo(0, 0) },
+			 onComplete:function(request){ new Effect.Highlight("saved-course-" + id); Element.hide('status-message');  }
+		 });
+	 }
+	 
+	 function removeCourse(id) {
+	   updater = new Ajax.Updater('course-list-container', '/saved_course/remove_course/' + id + '?_session_id=<%= session.session_id %>', {
+	     asynchronous:true,
+	     on403:function(request){ Element.update("status-message", "Save failed. Cookies probably being blocked. Check privacy settings.") }, 
+	     onLoading:function(request){ Element.update("course-" + id + "-remove", "<img src=\"/images/indicator_kit.gif\" /> Removing...");}, 
+	     onSuccess:function(request){ Element.hide('status-message'); }
+	   }); 
+	 }
+	 
+	 function toggleCourseDetails(id) {
+		 Element.toggleClassName(
+		 	'course-' + id + '-toggle', 'toggle-minimized'
+		 ).toggleClassName('toggle-maximized'); 
+		 Element.toggle('course-' + id + '-details');
+	 }
+	 
+	</script>
+<% end %>

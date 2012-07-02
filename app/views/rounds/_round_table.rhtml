@@ -1,0 +1,72 @@
+
+<div style="">
+
+
+	<div style="padding:0.3em 0">
+		<div style="float: right;">
+			<%= will_paginate round_table.rounds, :page_links => false %>
+		</div>
+		<div style="padding:0.3em 0">
+			<%= counts round_table.rounds %>
+		</div>
+	</div>
+	
+	<div style="">
+		<form id="round-table-form" onsubmit="return compare()" method="GET" action="<%= rounds_compare_url() %>">
+			<table class="round-table sortable">
+				<thead>
+					<tr>
+						<td colspan="6" style="padding: 10px 5px; background-color: #eeeeee;">
+							<input type="submit" value="Compare Rounds">
+						</td>
+					</tr>
+				
+					<tr class="">
+						<th class="nosort" style="">&nbsp;</th>
+						<% [["date_played", "Date"], 
+								["login", "User"], 
+								["name", "Course"], 
+								["total_holes", "Holes"], 
+								["total_score", "Total Score"]].each do |c| 
+						%>
+							<th class="sortcol <%= round_table.current_order_for(c.first) %>" onclick="location.href='<%= url_for(:controller => controller.controller_name, :action => controller.action_name) %>?sort=<%= c.first %>&order=<%= round_table.order_for(c.first) %>'">
+								<%= c.last %>
+							</th>
+						<% end %>
+					</tr>
+				</thead>
+				<tbody>
+					<% round_table.rounds.each do |r| %>
+						<tr>
+							<td style=""><%= check_box_tag("rounds[]", r.id) %></td>
+							<td><%= r.date_played.to_formatted_s :Beyyyy %></td>
+							<td><%= link_to username(:login => r.user_login, :source => r.user_source, :facebook_name => r.user_facebook_name), blog_url(:id => r.user_id) %></td>
+							<td><%= link_to r.course_name, course_url(:id => r.course_id, :name => r.course_name) %></td>
+							<td><%= r.total_holes %> holes</td> 
+							<td class="data"><%= link_to r.total_score, round_url(:id => r) %></td>			
+						</tr>
+					<% end %>
+				</tbody>
+			</table>
+		</form>
+	</div>
+	
+	<div style="float: right; margin-top: 5px;">
+		<%= will_paginate round_table.rounds, :page_links => false %>
+	</div>
+	<br clear="all" />
+	
+</div>
+
+<script>
+  function compare() {
+    var checkboxes = $('round-table-form').getInputs("checkbox", "rounds[]")
+    var forCompare = checkboxes.select( function(c) { return c.checked; } );
+    if (forCompare.length > 0 && forCompare.length < 5) {
+      var roundsParam = forCompare.collect( function(c) { return c.value } ).join(",");
+    } else {
+      alert("Use the checkboxes to choose up to 4 rounds to compare ");
+			return false;
+    }
+  }
+</script>

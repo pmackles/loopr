@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html>
+
+	<%= render :partial => 'layouts/head2' %>
+
+	<body id="standard<%= '-logged-in' if logged_in? %>">
+		
+		<!-- HACK: make sure that the redbox overlay covers whole screen -->
+		<div></div>
+		
+		<%= render :partial => 'layouts/login_menu' %>
+		<%= render :partial => 'layouts/navbar' %>
+
+   	<br />
+		<div id="mainShell">
+			<div>
+			
+<% if flash[:notice] -%>
+  <div class="importantMessage"><%= @flash[:notice] %></div>
+<% end -%>
+
+
+				<div style="width: 620px; float: left;">
+
+					<div id="title">
+						<table>
+							<tr>
+								<td valign="top">
+									<%= image_tag(group_icon_path(@group), :border => 0, :width => 48, :height => 48) %>
+								</td>
+								<td valign="top" style="padding-left: 10px">
+									<span style="font-size: 11px; font-weight: bold; color: #999999">Group</span>
+									<div style="font-size: 28px; font-weight: bold; margin-top: -3px"><%= h @group.name %></div>
+								</td>
+							</tr>
+						</table>
+					</div>
+	
+					<div id="tabmenu">
+
+	<ul>
+	    <li><%= link_to("Overview", 
+	    				{:controller => 'group', :action => 'show', :id => @group}, 
+	    				:id => (yield(:current_tab) == "overview" ? "current" : "overview")) %></li>
+	    <li><%= link_to("Rounds", 
+	    				{:controller => 'group', :action => 'rounds', :id => @group},
+	    				:id => (yield(:current_tab) == "rounds" ? "current" : "rounds")) %></li>
+	    <li><%= link_to("Stats", 
+	    				group_stats_url(:id => @group),
+	    				:id => (yield(:current_tab) == "stats" ? "current" : "stats")) %></li>
+	    <li><%= link_to("Members", 
+	    				{:controller => 'group', :action => 'members', :id => @group},
+	    				:id => (yield(:current_tab) == "members" ? "current" : "members")) %></li>
+	    <% if @group.admin?(current_user) %>
+		    <li><%= link_to("Admin", 
+		    				{:controller => 'group', :action => 'settings', :id => @group},
+		    				:id => (yield(:current_tab) == "settings" ? "current" : "settings")) %></li>
+	    <% end %>
+	    
+    </ul>
+					</div>
+		
+					<%= @content_for_layout %>
+				</div>
+			</div>
+  		<br clear="all" />
+ 		</div>
+
+		<%= render :partial => 'layouts/footer' %>
+  
+	</body>
+</html>

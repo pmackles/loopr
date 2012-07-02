@@ -1,0 +1,38 @@
+		<h3>Getting Started</h3>	 		
+ 		<p>
+ 		Your 
+ 		"<%= link_to "Your Loopr", :controller => 'user',
+ 					:action => 'blog', :id => current_user %>" page is
+ 		blank when you first start out. Here are some quick suggestions
+ 		for filling it in... 
+ 		</p>
+ 		
+ 		<p>
+ 			Get started by filling out your 
+ 			<%= link_to('profile', :controller => 'user', 
+ 						 :action => 'profile', :id => current_user) %>.
+			Don't forget to 
+			<%= link_to('upload an icon', 
+						:controller => 'account', 
+						:action => 'edit_icon') %>
+			to your profile for some added flair.
+			
+			Of course, you can skip all of the profile stuff and
+				get right into  
+				<%= link_to('posting some rounds', 
+							:action => 'new', :controller => 'round') %>
+				so that we can start compiling stats for you.
+				
+				Also, don't forget to fill in your 
+				<%= link_to('course map', :action => 'courses', 
+							:controller => 'user', :id => current_user) %>
+				with your favorite courses as well as some of your
+				<%= link_to('dream courses', :action => 'show', 
+							:controller => 'course', :id => 3465) %>. 
+				
+				Finally, you can  
+ 				<%= link_to 'create groups', :action => 'new', 
+ 					:controller => 'group' %>
+ 				for you and your friends so you can easily compare
+ 				stats and outings.
+	 		</p>

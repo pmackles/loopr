@@ -1,0 +1,25 @@
+<%= image_tag "indicator_kit.gif", :id => 'indicator', :style => 'display: none' %>
+
+<% if add_course_button.id %>
+	<%= image_tag "icons/checkmark.gif" %>
+	Added To Your <%= link_to "Course List", user_courses_url(:id => current_user) %>			   
+<% else %>
+	<span id="add-to-favorites">
+		<%= image_tag "icons/plus.gif" %>
+		<%= link_to_remote 'Add to Course List',
+			 		{
+						:loading => 'Element.show("indicator")',
+						:complete => 'Element.hide("indicator")',
+						:success => "Element.update('add-to-favorites', '#{image_tag 'icons/checkmark.gif'} Added To Your #{link_to('Course List', user_courses_url(:id => current_user))}'); new Effect.Highlight('add-to-favorites');",
+						:condition => 'checkForLogin(this)',
+						:url => {
+							:controller => 'saved_course',
+							:action => 'new', 
+							:id => add_course_button.course.id,
+							:save_type => 1,
+							:_session_id => session.session_id
+						}
+					}
+		%>
+	</span>
+<% end %>  	

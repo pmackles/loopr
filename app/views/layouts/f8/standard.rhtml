@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+   
+<% supress_ads %>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Golf Game</title>
+  <%= render :partial => 'layouts/f8/head' %>
+</head>
+
+<body>
+
+	<!-- HACK: make sure that the redbox overlay covers whole screen -->
+	<div></div>
+
+
+	
+	<div id="widebar" class="clearfix">
+		<div id="page_body" class="pagebody">
+			<div id="content" class="clearfix">
+				
+				<div class="dashboard_header">
+					<%= render :partial => 'layouts/f8/navbar' %>
+				</div>
+
+	
+				<div style="padding: 15px 15px 0 15px">
+					<div id="title">
+						<h1><%= yield :title %></h1>
+					</div>
+					
+					<%= @content_for_layout %>
+				</div>
+			</div>
+		</div>
+	</div>
+
+  <script type="text/javascript"> 
+    window.onload = function() { 
+      FB_RequireFeatures(["CanvasUtil"], function(){ 
+        FB.CanvasClient.startTimerToSizeToContent(); 
+      }); 
+    }; 
+  </script>
+  
+	<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	_uacct = "UA-801600-1";
+	urchinTracker();
+	</script>
+
+</body>
+</html>

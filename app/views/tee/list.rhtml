@@ -1,0 +1,15 @@
+<h2>Recently Played Unverified Courses</h2>
+
+<table cellpadding="3">
+	<tr>
+		<th>Course</th>
+	</tr>
+  
+<% @courses.each do |c| %>
+  <tr style="background-color: <%= cycle("white", "#ddd") -%>">
+	<td><%= h c.name %></td>
+  </tr>
+<% end %>
+</table>
+
+

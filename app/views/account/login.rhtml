@@ -1,0 +1,61 @@
+<div class="dialog" id="login">
+	
+	<div id="title"><h1>Login</h1></div>
+
+	<div style="float: left; width: 300px">
+
+	<ul class="plainList" style="list-style-type: disc">
+	<li>
+		Forgot your password? <%= link_to("Have it emailed to you", :action => 'forgot_password') %>.
+	</li>
+	<li>
+		<span style="color: #FFF; background-color: #6D84B4; font-weight: bold">&nbsp;Facebook&nbsp;</span>
+		user? You can <%= link_to("login", "http://www.facebook.com/login.php?api_key=#{FACEBOOK_API_KEY}&v=1.0&next=f8/login") %>
+		through facebook.
+
+	</li>
+	<li>
+		Need an account?
+		<%= link_to "Create one", :controller => 'account', :action => 'signup' %>.
+	</li>
+	</ul>
+	</div>
+
+	
+	<div style="margin-left: 320px; background-color: #ddd; padding: 10px; border: 1px solid #999">
+		<% if @error -%>
+		    <div class="errorBox">
+		    	<%= random_frustration %> - <%= @error %>.
+			</div>
+		<% end -%>
+
+		<div style="margin-bottom: 5px">
+			Enter your LOOPR.com username and password below.
+		</div>
+		
+		<% form_tag(:action => 'login') do %>
+		  <table>
+		    <tr>
+			  <td class="fieldLabel">Username: </td>
+			  <td><%= text_field('user', 'login', :size => 20) %></td>
+			</tr>
+		    <tr>
+			  <td class="fieldLabel">Password: </td>
+			  <td>
+			  	<%= password_field('user', 'password', :size => 20) %>
+			  </td>
+			</tr>
+		    <tr>
+			  <td>&nbsp;</td>
+		  	  <td>
+		  	  	<%= submit_tag("Sign in") %>
+		  	  </td>
+			</tr>
+		  </table>
+		  <%= hidden_field_tag "path", params[:path] %>
+		<% end %>
+	</div>
+	
+</div>
+  
+                                                                           

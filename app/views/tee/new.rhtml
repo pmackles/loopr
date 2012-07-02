@@ -1,0 +1,40 @@
+
+<div style="width: 500px; padding: 1em;">
+	<%= link_to_function image_tag("close_button.gif"), "RedBox.close()", :id => "RB_close"  %>
+
+	<br clear="all" />
+
+	<h2 class="breadcrumb">Add Tee for <%= @course.short_name %></h2>
+
+	<div id="confirm" style="color: green; display: none;">
+		Tee added.
+	</div>
+	
+	<div id="new-tee">
+		<div id="status" style="color: green; display: none;">
+			<%= image_tag "indicator_kit.gif", 
+						  :align => 'top', 
+						  :width => '48', :height => '16' %> Adding...
+		</div>
+			
+		<div id="errors" style="color: red"></div>
+		
+		<p>
+		Enter info for the tee below. All fields required. Everything you need should be on your scorecard.
+		</p>
+	
+		<%= form_remote_tag(:url => {
+								:controller => 'tee',
+								:action => 'create'
+							},
+							:complete => 'Tee.complete(request)',
+							:before => 'Tee.before()',
+							:html => { :id => 'new-tee-form' }
+							) %>
+			<%= render :partial => 'form' %>
+		<%= end_form_tag %>
+	</div>
+	
+</div>
+
+

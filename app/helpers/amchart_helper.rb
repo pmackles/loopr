@@ -1,0 +1,2 @@
+module AmchartHelper
+end

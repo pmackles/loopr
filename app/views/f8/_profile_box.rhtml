@@ -1,0 +1,111 @@
+
+<style>
+
+.plainListNoIndent li {
+  margin-top: 3px;
+}
+
+h4 {
+  font-size: 10px;
+  font-weight: bold;
+  color: #555555;
+  border-bottom: 1px solid #CCCCCC;
+  margin-bottom: 3px;
+}
+
+.plainListNoIndent {
+  list-style-type: none;
+  margin-left: 0px;
+  padding-left: 0px;
+  margin-top: 0px;
+}
+
+</style>
+	
+<%
+  lifetime_stats = user.lifetime_stats || UserStatSummary.new
+  stats = user.stats || UserLast20StatSummary.new
+  last_3_rounds = Round.list(:conditions => "user_id=#{user.id}", :limit => 3)
+  courses = user.saved_courses.collect { |sc| sc.course }
+  markers = courses.select { |c| c.mappable? }.collect { |c| "#{c.latitude},#{c.longitude},tinyred" }
+%>
+
+<fb:subtitle>
+	Handicap:
+	<% if stats.handicap %>
+		<a href="http://<%= FACEBOOK_DEFAULT_URL_OPTIONS[:host] %>/user/handicap/<%= user.id %>"><%= stats.handicap %></a>
+	<% else %>
+		na
+	<% end %>
+</fb:subtitle>
+
+<ul class="plainListNoIndent">
+	<fb:wide>
+	  <li style="margin-bottom: 15px;">
+		  <h4>Stats</h4>
+		  <ul class="plainListNoIndent clearfix">
+		  <% [[Metric.total_rounds, lifetime_stats.total_rounds_formatted],
+		  		[Metric.total_holes, lifetime_stats.total_holes_formatted],
+		  		[Metric.total_strokes, lifetime_stats.total_strokes_formatted],
+		  		[Metric.total_birdies, lifetime_stats.total_birdies_formatted],
+		  		[Metric.total_pars, lifetime_stats.total_pars_formatted],
+		  		[Metric.total_bogeys, lifetime_stats.total_bogeys_formatted],
+		  		[Metric.total_dbl_bogeys, lifetime_stats.total_dbl_bogeys_formatted],
+		  		[Metric.total_others, lifetime_stats.total_others_formatted]].each do |s| %>
+				<li style="float: left; width: 180px">
+					<%= s.first.label %>:
+					<% if s.last.blank? %>
+						na
+					<% else %>
+						<%= s.last %>
+					<% end %>
+			  </li>
+		  <% end %>
+		  </ul>
+			<div style="text-align: right">
+		  	<a href="http://<%= FACEBOOK_DEFAULT_URL_OPTIONS[:host] %>/user/rounds/summary/<%= user.id %>">More stats</a>
+		  </div>
+	  </li>
+  </fb:wide>
+  
+	<li style="margin-bottom: 15px;">
+		<h4>Most recent rounds</h4>
+		<% if last_3_rounds.any? %>
+			
+			<ul class="plainListNoIndent">
+				<% last_3_rounds.each_with_index do |r,i| %>
+					<li style="margin-bottom: 3px;">
+						<a href="http://<%= FACEBOOK_DEFAULT_URL_OPTIONS[:host] %>/round/show/<%= r.id %>"><%= r.total_score %></a> 
+						at <a href="http://<%= FACEBOOK_DEFAULT_URL_OPTIONS[:host] %>/course/show/<%= r.course_id %>"><%= r.course_name %></a><br />
+						<span style="font-size: 10px; color: #777777">posted <%= r.created_on.to_formatted_s :Beyyyy %></span>
+					</li>
+				<% end %>
+			</ul>
+		<% else %>
+			na
+		<% end %>
+		<div style="text-align: right">
+			<a href="http://<%= FACEBOOK_DEFAULT_URL_OPTIONS[:host] %>/user/blog/<%= user.id %>">More rounds</a>
+		<div>
+	</li>
+
+	<fb:wide>
+		<li style="margin-bottom: 15px;">
+			<h4>Courses</h4>
+			<% if courses.any? %>
+				<%= pluralize courses.size, "courses" %>
+			<% else %>
+				no courses yet
+			<% end %>
+			<img src="http://maps.google.com/staticmap?zoom=0&markers=<%= markers.join("|") %>&size=380x175&key=<%= GMAPS_KEY %>" />
+			<div style="text-align: right">
+				<a href="http://<%= FACEBOOK_DEFAULT_URL_OPTIONS[:host] %>/user/courses/<%= user.id %>">More courses</a>
+			<div>
+		</li>
+	</fb:wide>
+
+</ul>
+
+<div style="margin-top: 8px">
+	Play golf? Try <a href="http://<%= FACEBOOK_DEFAULT_URL_OPTIONS[:host] %>/">Golf Game
+</div>

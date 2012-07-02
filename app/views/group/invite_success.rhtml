@@ -1,0 +1,16 @@
+<% title @group.name + ": Settings" %>
+<% current_tab "settings" %>
+
+<h2>Edit Basic Group Info</h2>
+
+<div class="subSection">
+
+	<div class="progressBox">
+	<%= image_tag "checkmark.gif", :valign => "top" %> Invitations sent. 
+	</div>
+	
+	<p>
+		<%= link_to("Return to main admin page", :action => :settings, :id => @group) %>
+	</p>
+	
+</div>

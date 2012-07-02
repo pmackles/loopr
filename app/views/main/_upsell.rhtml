@@ -1,0 +1,34 @@
+<div style="text-align: left;">
+	<h1 class="welcomeHeader">Welcome to LOOPR!</h1>
+
+  	<div id="signupBox">
+		<h1>	
+	    	<%= link_to "Sign up for FREE!", 
+	    				:controller => 'account', 
+	    				:action => 'signup' %>
+		</h1>
+	    <p>
+	    	It takes just a few seconds
+	    </p>
+		
+	    <p style="margin: 5px 0 0 0; padding: 3px 0 0 0; font-size: 11px; border-top: 1px solid #ccc;">
+	    	Already have an account? Then
+	    	<b><%= link_to "login", 
+	    				:controller => 'account',
+	    				:action => 'login'
+	    	%></b>.
+	    </p>
+	</div>
+  
+  	<strong>
+  		LOOPR is the best and easiest way to track your golf game 
+  		on the Internet. With LOOPR, you can:
+  	</strong>
+  	<ul id="featureList">
+   		<li>Post your scorecards online and share them with your friends.</li>
+   		<li>Instantly get a LOOPR handicap.</li>
+   		<li>Create groups with your friends and compare scores/stats.</li>
+   		<li>Create your own personal golf map and blog widgets.</li>
+   		<li>Track tons of personal stats like GIR, putting avg, birdie avg, driving distance and much much more.</li>
+  	</ul>
+ </div>

@@ -1,0 +1,70 @@
+<% title "Golf Courses: #{@location}" %>
+<% description "Directory of public and private golf courses for #{@location}. Includes stats, scorecard info, user reviews and interactive maps." %>
+
+<div style="float: right; margin-bottom: 10px"><%= will_paginate @courses, :inner_window => 1, :outer_window => 0, :renderer => CoursesHelper::CoursesBrowseLinkRenderer %></div>
+<br clear="right" />
+
+<div id="columnLeft" style="width: 190px">
+	<% if @region && @subdivision %>		
+		<div class="heading-bar">
+		  <b><%= "#{@subdivision} Cities" %></b>
+		</div>
+		<% if @cities.any? %>
+			<ul class="plainList">
+				<% @cities.each do |c| %>
+					<li><%= link_to_unless_current(c, courses_browse_url(:region => @region.name, :subdivision => @subdivision, :city => c)) { |n| "<b>#{n}</b>" } %></li>
+				<% end %>
+				<li style="margin-top: 10px"><b><%= link_to("&raquo; All #{@subdivision} Cities", cities_url(:region => @region.name, :subdivision => @subdivision)) %></b></li>
+			</ul>
+		<% end %>
+	<% elsif @region %>
+		<b><div class="heading-bar">Regions</div></b>
+		<ul class="plainList">
+			<% @region.subdivisions.ordered.each do |s| %>
+				<li><%= link_to_unless_current(s[1], courses_browse_url(:region => @region.name, :subdivision => s[1])) %></li>
+			<% end %>
+		</ul>
+	<% else %>
+		<b><div class="heading-bar">Countries</div></b>
+		<ul class="plainList">
+			<% Geography::Region.all.each do |r| %>
+				<li>
+					<%= link_to_unless_current(r.name, courses_browse_url(:region => r.name)) %>
+				</li>
+			<% end %>
+		</ul>
+	<% end %>
+</div>
+			
+<div id="columnRight" style="margin-left: 200px">
+	<div class="heading-bar">
+		<%= counts @courses, nil, @location %>
+	</div>
+
+	<ul class="plainList">
+
+		<% if @courses.any? %>
+			<% @courses.each do |c| %>
+				<li style="margin-bottom: 14px">
+					<span style="font-weight: bold; font-size: 14px">
+						<%= link_to c.name, course_url(:id => c, :name => c.name) %>
+					</span><br />
+					<%= c.address.to_formatted_s :short %><br />
+					<%= quick_facts c %>
+				</li>
+			<% end %>
+		<% else %>
+			<p>
+			Sorry, no courses
+			</p>
+		<% end %>
+	</ul>
+
+	<div class="heading-bar">
+		<%= counts @courses, nil, @location %>
+	</div>
+
+	<div style="float: right;"><%= will_paginate @courses, :inner_window => 1, :outer_window => 0, :renderer => CoursesHelper::CoursesBrowseLinkRenderer %></div>
+	<br clear="right" />
+		
+</div>

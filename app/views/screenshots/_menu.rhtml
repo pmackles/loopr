@@ -1,0 +1,21 @@
+
+<br clear="right" />
+
+<div style="font-size: 14px; text-align: center;">
+	<b>
+	<% if prev %>
+		<%= link_to ("<< Prev", :action => prev) %>
+	<% else %>
+		&lt;&lt; Prev
+	<% end %>
+	</b>
+	| 
+	<b>
+	<% if nnext %>
+		<%= link_to ("Next >>", :action => nnext) %>
+	<% else %>
+		Next &gt;&gt;
+	<% end %>
+	</b>
+</div>
+

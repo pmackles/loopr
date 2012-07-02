@@ -1,0 +1,9 @@
+<h2>New Course</h2>
+
+<% form_tag :action => 'create' do %>
+  <%= render_partial 'form' %>
+  <p>
+  <%= hidden_field :course, :status %>
+  <%= submit_tag 'Save' %>
+  </p>
+<% end %>

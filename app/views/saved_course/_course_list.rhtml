@@ -1,0 +1,51 @@
+
+<% if editable %>
+	<div style="margin-bottom: 15px">
+		<% if course_list.empty? %>
+			Your course list is empty. Click on the "Add Course" link above to start adding courses.
+		<% else %>
+			Note: to remove a course for which you have posted one or more rounds, you need to delete the rounds first. To
+			add a course, click on the "Add Course" link above.
+		<% end %>
+	</div>
+<% end %>
+
+<div style="margin-bottom: 5px; font-style: italic">
+	<%= pluralize(course_list.length, "course") %>,
+	<%= pluralize(course_list.collect { |sc| sc.course_country }.uniq.length, "country") %>
+</div>
+
+<ul class="plainList course-list" style="margin-left: 0x; padding-left: 0px;">
+	<% course_list.each do |sc| %>
+		<li id="saved-course-<%= sc.course_id %>" style="border-top: 1px dotted #bbb; padding: 3px 0 3px 0">
+			<div class="clearfix course-list-header">
+				<% if editable && (sc.rounds_played.nil? || sc.rounds_played == 0) %>
+					<div style="float: right; font-size: 10px; padding-right: 8px;">
+						<span id="course-<%= sc.course_id %>-remove">
+							<%= link_to('Remove', '#', :onclick => "removeCourse(#{sc.course_id}); return false;")  %>
+						</span>
+					</div>
+				<% end %>
+				
+				<div>
+					<h3>
+						<div id="course-<%= sc.course_id %>-toggle" onclick="toggleCourseDetails(<%= sc.course_id %>)" style="" class="toggle-minimized toggle"></div>
+						<%= sc.course_namex %>
+					</h3>
+					<span style="font-size: 10px; padding-left: 15px;">
+						<%= Address.new(nil, sc.course_city, sc.course_state, sc.course_country).to_formatted_s(:short) %>
+					</span>	
+				</div>
+			</div>
+			
+			<div id="course-<%= sc.course_id %>-details" style="margin-top: 8px; margin-left: 15px; display: none" class="clearfix">				
+				<div style="float: left">
+					<img src="http://maps.google.com/staticmap?zoom=14&maptype=satellite&center=<%= sc.course_latitude %>,<%= sc.course_longitude %>&size=250x150&key=<%= GMAPS_KEY %>" />
+				</div>
+				<div style="margin-left: 260px; font-size: 11px">
+					<%= fffggg(@user, sc) %>
+				</div>
+			</div>
+		</li>
+	<% end %>
+</ul>

@@ -1,0 +1,43 @@
+
+<% unless logged_in? %>
+	<table class="eyebrow">
+		<tr>
+			<td>
+				LOOPR is a free stat and handicap tracker for golfers. 
+				<%= link_to "Learn more", :controller => :main, :action => :more %> or 
+				<%= link_to("sign up", :controller => :account, :action => :signup) %> now.
+			</td>
+		</tr>
+	</table>
+<% end %>
+
+<div id="header">
+	<div id="loginMenuContainer">
+		<div>
+			<% if logged_in? %>
+		  	<div id="logged-in"></div>
+		 			<span id="signedInAs" style="padding-left: .5em;">
+		  	 		Signed in as <b><%= display_name(session['user']) %></b>:
+		  	 	</span>
+		
+					<%= link_to 'Settings', :action => 'settings', :controller => 'account' %> |
+					<%= link_to 'Sign out', :action => 'logout', :controller => 'account', :path => url_for %>
+			<% else %>
+		    	<div id="not-logged-in" style="display: none;">
+		    		<p>
+		    			You need to 
+		    			<%= link_to 'register', :action => 'signup', :controller => 'account' %> or 
+		    			<%= link_to 'login', :action => 'login', :controller => 'account' %>
+							before you can perform this action.
+		    		</p>
+		    	</div>
+					<span style="">
+						<%= link_to 'Sign in', :action => 'login', :controller => 'account' %>
+					</span>
+		   <% end %>
+		</div>
+	</div>
+	
+	<%= link_to("<img src='/images/header2.png' width='350' height='75' />", :controller => '/') %>		
+
+</div id="header">

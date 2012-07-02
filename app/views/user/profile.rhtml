@@ -1,0 +1,31 @@
+<% title username(@user, :possessive => true) + " Game: Profile" %>
+<% current_tab "profile" %>
+
+<div class="subSection">
+   <% if same_as_current_user?(@user) %>
+		<div style="float: right; margin-bottom: 10px">
+			<%= link_to "Edit Profile", edit_profile_url() %>
+		</div>
+		<br clear="right" />
+	<% end %>
+
+	<table class="profile">
+		<%= profile_table_row "Location", @user.location %>
+		<%= profile_table_row("Age", age(@user)) %>
+		<%= profile_table_row("Gender", gender(@user)) %>
+		<%= profile_table_row("Handedness", handedness(@user)) %>
+		<%= profile_table_row("Playing Since", playing_since(@user)) %>
+		<%= profile_table_row("Unofficial Handicap", handicap(@user.stats, handicap_url(:id => @user)), :filter => false) %>
+		<%= profile_table_row("Best Round Ever", low_round(@user), :filter => false) %>
+		<%= profile_table_row("Rounds Posted", rounds_posted(@user.lifetime_stats)) %>
+		<%= profile_table_row("About Me", simple_format(@user.description)) %>
+		<%= profile_table_row("Best Golf Moment", simple_format(@user.best_golf_moment)) %>
+		<%= profile_table_row("Worst Golf Moment", simple_format(@user.worst_golf_moment)) %>
+		<%= profile_table_row("Favorite Golf Quote", simple_format(@user.favorite_quote)) %>
+		<%= profile_table_row("Biggest Swing Fault", simple_format(@user.biggest_fault)) %>
+		<%= profile_table_row("Greatest Swing Strength", simple_format(@user.greatest_strength)) %>
+		<%= profile_table_row("In the Bag", simple_format(@user.in_the_bag)) %>
+		<%= profile_table_row("Favorite Pro", @user.favorite_pro) %>
+	</table>
+
+</div>

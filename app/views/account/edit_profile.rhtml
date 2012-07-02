@@ -1,0 +1,56 @@
+<% title username(@user, :possessive => true) + " Game: Edit Profile" %>
+<% current_tab "profile" %>
+
+<div style="float: right; margin-bottom: 10px">
+	<%= link_to "View Profile", profile_url(:id => @user) %>
+</div>
+<br clear="right" />
+
+  <p>
+  All Profile Fields are optional. Any information you provide here will be public.
+  </p>
+
+	<div id="status-message">&nbsp;</div>
+    
+  <% form_remote_for(
+  		:user, 
+  		@user, 
+  		:url => { :action => :edit_profile, :_session_id => session.session_id }, 
+  		:loading => 'Element.addClassName("status-message", "on").update("Saving <img src=\"/images/indicator_kit.gif\" />"); window.scrollTo(0, 0)',
+			:complete => "handleSubmitResponse(request)") do |f| 
+  %>
+  	<table class="profile">
+  		<%= profile_table_row("Location", f.text_field(:location, :size => 40, :maxlength => 64), :filter => false) %>
+			<%= profile_table_row("Year Of Birth", f.text_field(:year_of_birth, :size => 4, :maxlength => 4), :filter => false) %>
+			<%= profile_table_row("Gender", f.select(:gender, array_to_hash(User::GENDER_LABELS)), :filter => false) %>
+			<%= profile_table_row("Handedness", f.select(:handedness, array_to_hash(User::HANDEDNESS_LABELS)), :filter => false) %>
+			<%= profile_table_row("Playing Since", f.text_field(:playing_since, :size => 4, :maxlength => 4), :filter => false) %>
+			<%= profile_table_row("About Me", f.text_area(:description, :rows => 3), :filter => false) %>
+			<%= profile_table_row("Greatest Golf Moment", f.text_area(:best_golf_moment, :rows => 3), :filter => false) %>
+			<%= profile_table_row("Worst Golf Moment", f.text_area(:worst_golf_moment, :rows => 3), :filter => false) %>
+			<%= profile_table_row("Favorite Golf Quote", f.text_area(:favorite_quote, :rows => 3), :filter => false) %>
+			<%= profile_table_row("Biggest Swing Fault", f.text_area(:biggest_fault, :rows => 3), :filter => false) %>
+			<%= profile_table_row("Greatest Swing Strength", f.text_area(:greatest_strength, :rows => 3), :filter => false) %>
+			<%= profile_table_row("Swing Thoughts", f.text_area(:swing_thoughts, :rows => 3), :filter => false) %>
+			<%= profile_table_row("In the Bag", f.text_area(:in_the_bag, :rows => 3), :filter => false) %>
+			<%= profile_table_row("Favorite Pro", f.text_field(:favorite_pro, :size => 40, :maxlength => 64), :filter => false) %>
+
+  		<tr>
+	  		<td></td>
+  	  		<td><%= submit_tag("Save") %></td>
+		  </tr>
+  	</table>
+  <% end %>
+
+<script>
+ function handleSubmitResponse(request) {
+ 	var rtn = eval('(' + request.responseText + ')');
+ 	window.scrollTo(0, 0);
+ 	if (rtn.saved == true) {
+ 		$('status-message').update("Changes saved.")
+ 	} else {
+ 	  $('status-message').update("Unexpected problem.")
+  }
+ }
+</script>
+

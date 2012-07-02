@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html>
+
+	<%= render :partial => 'layouts/f8/head' %>
+
+	<body>
+		
+		<!-- HACK: make sure that the redbox overlay covers whole screen -->
+		<div></div>
+		
+		<div class="dashboard_header">
+			<%= render :partial => 'layouts/f8/navbar' %>
+		</div>
+
+		<div class="clearfix">					
+			<%= render :partial => 'courses/search_form', :locals => { :region => @course.address.region, :subdivision => @course.address.state, :city => @course.address.city } %>
+
+			<div id="title">
+				<h1><%= yield :title %></h1>
+			</div>					
+
+			<div class="clearfix">
+				<div class="toolbar" style="float: right">
+					<%= render :partial => "saved_course/add_course_button", :object => @saved_course %>
+					<%= image_tag "icons/edit.gif" %> <%= post_round_for_course_link @course, "Post Round" %>
+				</div>
+			</div>
+
+			<div class="tabs clearfix">	
+				<center>
+					<div class="left_tabs">
+						<ul id="toggle_tabs_unused" class="toggle_tabs clearfix">
+							<li class="first"><%= 
+								link_to("Overview", course_url(:id => @course, :name => @course.name), :class => yield(:current_tab) == "overview" ? "selected" : "") 
+							%></li><li><%= 
+							  link_to("Rounds", course_rounds_url(:id => @course), :class => yield(:current_tab) == "rounds" ? "selected" : "")
+						  %></li>
+						</ul>
+					</div>
+				</center>
+			</div>
+
+			<div style="padding: 15px">
+				<%= @content_for_layout %>
+			</div>
+
+ 		</div>
+
+	  <script src="http://static.ak.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
+	  <script type="text/javascript"> 
+	    window.onload = function() { 
+	      FB_RequireFeatures(["CanvasUtil"], function(){ 
+	        FB.XdComm.Server.init("/xd_receiver.htm"); 
+	        FB.CanvasClient.startTimerToSizeToContent(); 
+	      }); 
+	    }; 
+	  </script>
+	  
+		<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+		<script type="text/javascript">
+		_uacct = "UA-801600-1";
+		urchinTracker();
+		</script>
+  
+	</body>
+</html>

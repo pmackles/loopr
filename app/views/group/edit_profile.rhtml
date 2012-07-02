@@ -1,0 +1,33 @@
+<% title @group.name + ": Settings" %>
+<% current_tab "settings" %>
+
+<h2>Edit Basic Group Info</h2>
+
+<div class="subSection">
+	
+	<%= error_messages_for 'group' %>
+	
+  <% form_for(:group, @group, :url => { :action => :edit_profile, :id => @group }) do |f| %>
+		<table border="0" cellspacing="5">
+			<tr>
+			  <td class="fieldLabel">Group Name:</td>
+			  <td><%= f.text_field(:name, :size => 40) %></td>
+			</tr>
+			
+			<tr>
+			  <td class="fieldLabel" valign="top">Description:</td>
+			  <td><%= f.text_area(:description, :cols => 40, :rows => 10) %></td>
+			</tr>
+			
+			<tr>
+			  <td></td>
+			  <td><%= submit_tag "Save Changes" %></td>
+			</tr>
+		</table>
+	<% end %>
+
+	<p>
+		<%= link_to("Return to main admin page", :action => :settings, :id => @group) %>
+	</p>
+	
+</div>

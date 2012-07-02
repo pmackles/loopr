@@ -1,0 +1,115 @@
+<% title username(@user, :possessive => true) + " Game: Overview" %>
+<% rss feed_url(:username => @user.login) %>
+<% current_tab "overview" %>
+
+
+	<div style="float: left; width: 300px">
+		<div class="subSection">
+			 <h3>Recent Rounds</h3>
+			 <div style="margin-left: 5px;">
+				 <% if @rounds.empty? %>
+				 	No Rounds Yet.
+				 	<% if same_as_current_user?(@user) %>
+				 		What are you waiting for? Start <%= link_to "posting scores", round_new_url() %> already!
+				 	<% end %>
+				 	
+				 <% else %>
+				 		<ul class="plainList">
+				 		<% @rounds.each_with_index do |r, i| %>
+				 			<li class="round-headline <%= "round-headline-separator" unless i == 0 %>">
+				 				<%= round_headline(r) %>
+				 			</li>
+				 		<% end %>
+				 		</ul>
+				 <% end %>
+			 </div>
+		</div>
+  </div>
+   
+  	<div style="margin-left: 335px; width: 250px;">
+  		<div class="subSection">
+				<h3>Vitals</h3>
+				<ul class="plainList" style="font-size: 11px">
+					<li style="">
+						<table style="border-collapse: collapse; width: 98%">
+							<% [["Unofficial Handicap", handicap(@user.stats, handicap_url(:id => @user))],
+									["Best Round Ever", low_round(@user)],
+									["Rounds Posted", rounds_posted(@user.lifetime_stats)],
+									["Playing Since", playing_since(@user)],
+									["Handedness", handedness(@user)]].each do |r| %>
+								<tr>
+									<th nowrap><%= r.first %>:</th>
+									<td nowrap align="right" style="padding: 3px"><%= r.last %></td>
+								</tr>
+							<% end %>
+						</table>
+					</li>
+				</ul>
+				
+				<div style="float: right">
+					<%= link_to("More Profile...", profile_url(:id => @user)) %>
+				</div>
+				<br clear="right" />
+			</div>
+							     	
+  		<div id="stats" class="subSection" >
+  			<h3>Stats</h3>
+  			<ul class="plainList" style="font-size: 11px">
+
+					<% sdnuor = @rounds.reverse
+						 [[Metric.avg_18_hole_gross_score, @lifetime_stats.avg_18_hole_gross_score_formatted, sdnuor.select { |r| r.total_holes == 18 }.collect { |r| r.total_score }],
+			  			[Metric.pct_girs, @lifetime_stats.pct_girs_formatted, sdnuor.collect { |r| r.pct_girs }],
+							[Metric.pct_fairways_hit, @lifetime_stats.pct_fairways_hit_formatted, sdnuor.collect { |r| r.pct_fairways_hit }],
+				 			[Metric.pct_birdies, @lifetime_stats.pct_birdies_formatted, sdnuor.collect { |r| r.pct_birdies }],
+							[Metric.pct_pars, @lifetime_stats.pct_pars_formatted, sdnuor.collect { |r| r.pct_pars }],
+							[Metric.pct_bogeys, @lifetime_stats.pct_bogeys_formatted, sdnuor.collect { |r| r.pct_bogeys }],
+							[Metric.pct_dbl_bogeys, @lifetime_stats.pct_dbl_bogeys_formatted, sdnuor.collect { |r| r.pct_dbl_bogeys }],
+							[Metric.avg_putts_per_hole, @lifetime_stats.avg_putts_per_hole_formatted, sdnuor.collect { |r| r.avg_putts_per_hole }]].each do |m| %>
+						<li style="margin-top: 10px">
+							<table style="border-collapse: collapse; width: 240px">
+								<tr>
+									<td nowrap style="">
+										<strong><%= m[0].label %>:</strong>
+									</td>
+									<td nowrap align="right">
+										<% if m[1].blank? %>
+											<%= na %>
+										<% else %>
+											<%= link_to(m[1], user_rounds_stat_url(:id => @user, :metric => m[0].name, "filter[time_period]" => "max", "filter[users][]" => @user.id)) %>
+										<% end %>
+										<%= link_to(sparkline_img(m[2]), user_rounds_stat_url(:id => @user, :metric => m[0].name)) %>
+									</td>
+								</tr>
+							</table>
+						</li>
+					<% end %>	
+				</ul>
+	
+				<div style="float: right">
+					<%= link_to "All Stats...", stats_url(:id => @user) %>
+				</div>
+				<br clear="right" />
+			</div>
+
+
+  		<div class="subSection">
+  			<h3>Courses</h3>
+				<div style="padding-left: 5px; font-size: 11px">
+  				<div style="margin-bottom: 5px">
+	  				<% if @user.saved_courses.empty? %>
+							No Courses yet.
+						<% else %>
+							<%= pluralize(@user.saved_courses.length, "course") %>,
+							<%= pluralize(@user.saved_courses.collect { |sc| sc.course.country }.uniq.length, "country") %>
+						<% end %>
+			 		</div>
+					<%= link_to(
+								course_map_image_tag(@user.saved_courses.collect { |sc| sc.course }), 
+								url_for(:controller => :user, :action => :courses, :id => @user, :only_path => false)
+					) %>	
+				</div>
+			</div>
+	</div>
+	
+<br clear="left" />
+

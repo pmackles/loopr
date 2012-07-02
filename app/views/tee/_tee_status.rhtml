@@ -1,0 +1,23 @@
+<div id="tee-status">
+	<% if @course.complete_with_tees? %>
+		Tees Locked:
+		<%= link_to_remote "Unlock", :update => "tee-status",
+									 :url => {
+									 	:controller => :course,
+									 	:action => :lock_tees,
+									 	:id => @course,
+									 	:status => Course::COMPLETE
+									 }
+		%>
+	<% else %>
+		Tees Unlocked:
+		<%= link_to_remote "Lock", :update => "tee-status",
+									 :url => {
+									 	:controller => :course,
+									 	:action => :lock_tees,
+									 	:id => @course,
+									 	:status => Course::COMPLETE_WITH_TEES
+									 }
+		%>
+	<% end %>
+</div>

@@ -1,0 +1,22 @@
+<% title "Post Score" %>
+<% supress_ads %>
+
+<div id="hidden_content_course_picker" style="display: none;"></div>
+
+<div style="margin-top: 1em;">
+	<p>
+	Enter your round below. All fields required unless noted otherwise. 
+	</p>
+	
+	<% form_remote_tag(
+			:url => {:controller => 'round', :action => 'create', :only_path => true, :_session_id => session.session_id },
+			:loading => 'handleSubmit();',
+			:complete => 'handleSubmitResponse(request);',
+			403 => 'alert("Save failed. Cookies probably being blocked. Check privacy settings.")',
+			:html => {:id => 'post_score'}) do %>
+			<%= hidden_field :round, :handicap %>
+	    <%= render_partial 'round/form' %>
+	<% end %>
+</div>
+
+

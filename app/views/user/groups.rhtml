@@ -1,0 +1,35 @@
+<% title username(@user, :possessive => true) + " Game: Groups" %>
+<% current_tab "groups" %>
+
+<div class="subSection">
+	
+    <% if same_as_current_user?(@user) %>
+	    <p>
+	    	<%= link_to("Create New Group", :action => 'new', :controller => 'group') %>
+	    </p>
+    <% end %>
+    
+    <% if @user.groups.empty? %>
+		<p>
+		No Groups Yet.
+		<% if same_as_current_user?(@user) %>
+			Groups are great. Set one up one and invite your buddies now.
+		<% end %>
+		</p>
+	<% else %>
+		<p>
+		Member of these groups...
+		</p>
+		<div class="userGroupList">
+			<% @user.groups.each { |group| %>
+		    	<p>
+		    	<%= image_tag(group_icon_path(group), 
+							  :border => 0, 
+							  :width => 48, :height => 48) %><br />	  
+				<%= link_to(group.name, :action => 'show', :controller => 'group', :id => group) %>
+			    </p>
+	    	<% } %>
+    	</div>
+	<% end %>
+
+</div>

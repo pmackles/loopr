@@ -1,0 +1,27 @@
+<%= link_to "New Course", :controller => :course, :action => :new %>
+
+<p>
+Total: <%= Course.count %><br />
+Locked: <%= Course.count(:all, :conditions => "status = 2") %><br />
+</p>
+
+<p>
+<h2>Popular</h2>
+<% Course.popular(100).each do |c| %>
+	<%= link_to c.name, course_url(c) %><br />
+<% end %>
+</p>
+
+<p>
+<h2>Unmapped</h2>
+<% Course.unmapped(100).each do |c| %>
+	<%= link_to c.name, course_url(c) %><br />
+<% end %>
+</p>
+
+<p>
+<h2>Bad Address</h2>
+<% Course.badaddress(100).each do |c| %>
+	<%= link_to c.name, course_url(c) %><br />
+<% end %>
+</p>

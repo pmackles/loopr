@@ -1,0 +1,29 @@
+<head>
+  <title>
+  	<% unless @breadcrumb.empty? %>
+	   	<% @breadcrumb.each_with_index { |n, i| %>
+	   		<%= "/" unless i == 0 %>
+	   		<%= n[:label] %>
+	  	<% } %> -
+  	<% end %>
+  	LOOPR
+  </title>
+
+  <meta name="description" content="<%= @description || 'Online golf game manager. Track rounds, courses, stats and handicaps. Create groups with your friends. Course Directory with ratings and tips.' %>">
+  <meta name="keywords" content="<%= @keywords || 'golf handicap, golf handicap tracker, golf handicap system, golf handicap calculator, golf handicap software, calculate golf handicap, golf score handicap, golf handicap calculation, online golf handicap, golf handicap formula, calculating golf handicap, figuring golf handicap, golf course directory, golf stats' %>">
+  
+  <%= yield :rss %>
+  
+  <%= stylesheet_link_tag 'loopr2' %>
+  <%= stylesheet_link_tag 'scorecard' %>
+  <%= stylesheet_link_tag 'redbox' %>
+  <%# stylesheet_link_tag 'sweetTitles' %>
+  <%= javascript_include_tag 'prototype' %>
+  <%= javascript_include_tag 'effects' %>
+  <%= javascript_include_tag 'controls' %>
+  <%= javascript_include_tag 'global' %>
+  <%= javascript_include_tag 'redbox' %>
+  <%= javascript_include_tag 'swfobject' %>
+  <%# javascript_include_tag 'addEvent' %>
+  <%# javascript_include_tag 'sweetTitles' %>
+</head>

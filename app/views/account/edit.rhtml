@@ -1,0 +1,53 @@
+<% @page_title = "#{display_name(current_user)} / Settings" %>
+
+<div title="<%= title_helper %>" class="form">
+  <%= head_helper :error => true %>
+	<p>
+	<h3>Profile</h3>
+	<%= start_form_tag :action => 'edit' %>
+		<%= hidden_field('user', 'form', :value => 'edit') %>
+  		<table>
+  		 <tr>
+	  		<td class="fieldLabel">Year Of Birth: </td>
+	  		<td><%= text_field('user', 'year_of_birth', 
+	  						   :size => 4, :maxlength => 4) %></td>
+		 </tr>
+  		 <tr>
+	  		<td class="fieldLabel">Playing Since: </td>
+	  		<td><%= text_field('user', 'playing_since', 
+	  						   :size => 4, :maxlength => 4) %></td>
+		 </tr>
+  		 <tr>
+	  		<td class="fieldLabel">Postal Code: </td>
+	  		<td><%= text_field('user', 'postal_code', 
+	  						   :size => 5, :maxlength => 5) %></td>
+		 </tr>
+  		 <tr>
+	  		<td class="fieldLabel">Lefty or Righty: </td>
+	  		<td><%= select('user', 'handedness', lefty_or_right_select, 
+	  					   :prompt => 'Please Select') %></td>
+		 </tr>
+  		 <tr>
+	  		<td>&nbsp;</td>
+  	  		<td><%= submit_tag("Change Profile") %></td>
+		 </tr>
+  		</table>
+	<%= end_form_tag %>
+    </p>
+    
+	<p>
+	<h3>Email Address</h3>
+    <%= start_form_tag_helper %>
+      <%= render_partial 'edit', :user => @user, :submit => true %>
+    <%= end_form_tag %>
+    </p>
+    
+    <p>
+    <h3>Password</h3>
+    <%= start_form_tag_helper %>
+      <%= render_partial 'password', :submit => true %>
+    <%= end_form_tag %>
+	</p>
+	
+  </div>
+</div>

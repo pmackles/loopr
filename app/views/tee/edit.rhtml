@@ -1,0 +1,71 @@
+
+<h2>Edit Tees - <%= h @course.name %></h2>
+
+<%= link_to "&laquo; Back to Course Page", :controller => 'course', :action => 'show', :id => @course %>
+
+<p>
+Tees for <%= h @course.name %> shown below. You can add new tees using the form to the right. 
+To modify a tee, you should delete it and then add it new.
+</p>
+
+<div style="float: left; width: 350px">
+	<%= render(:partial => 'tee_list', :locals => { :course => @course, :edit_mode => true }) %>
+	<p>
+	<%= render :partial => 'tee_status' %>
+	</p>
+</div>
+
+<div style="margin-left: 360px">
+	<% if @tee.errors.any? %>
+		<div class="errorBox">
+			<ul>
+				<% @tee.errors.full_messages.each do |e| %>
+					<li><%= e %></li>
+				<% end %>
+			</ul>
+		</div>		
+	<% end %>
+	
+	<% form_for(:tee, @tee, :url => {
+								:controller => 'tee',
+								:action => 'create'
+							 }) do |f| %>
+		<table>
+			<tr>
+				<td>Name:</td>
+				<td><%= f.text_field(:name, :size => 15) %></td>
+			</tr>
+			<tr>
+				<td>Type:</td>
+				<td>
+					<%= f.select(:score_type, score_types, {:prompt => 'Please Select'}) %>
+				</td>
+			</tr>
+			<tr>
+				<td>Rating/Slope:</td>
+				<td>
+					<%= f.text_field(:mens_rating, :size => 4) %>/
+					<%= f.text_field(:mens_slope, :size => 4) %>
+				</td>
+			</tr>
+			<tr>
+				<td>Par:</td>
+				<td><%= f.text_field(:par, :size => 4) %></td>
+			</tr>
+			<tr>
+				<td>Length:</td>
+				<td><%= f.text_field(:yardage, :size => 3) %></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><%= submit_tag("Add") %></td>
+			</tr>
+		</table>
+		<%= f.hidden_field :course_id %>
+	
+	<% end %>
+</div>
+
+<br clear="left" />
+
+

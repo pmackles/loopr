@@ -1,0 +1,40 @@
+
+<div id="filter-div" style="font-size: 11px">
+
+ <% form_for(:filter, round_filter, :url => "", :html => { :id => "filter" }) do |f| %>
+	 <table cellspacing="5">
+	  <tr>
+	   <th>Time Period:</th>
+	   <td>
+	   	<%= f.select :time_period, RoundFilter.time_periods, {}, :onchange => "updateData()" %>
+	   </td>
+	  </tr> 
+	
+	  <tr>
+	   <th>Course:</th>
+	  	<td>
+	  		<%= f.select :course, [["All", ""]] + courses.collect { |c| [c.name, c.id.to_s] }, {}, :onchange => "updateData()" %>
+			</td>
+	  </tr>
+	  
+<!---	  
+	  <tr>
+	   <th>Rounds:</th>
+	   <td>
+	   	
+	   	<%# f.select :number_of_holes, RoundFilter::NUMBER_OF_HOLES, {}, :onchange => "updateData()" %>
+	   </td>
+	  </tr>
+-->
+
+	 </table>
+	<%= f.hidden_field :number_of_holes %>
+	
+	<% users.each_with_index do |u,i| %>
+		<input id="filter_users_<%= i %>" type="hidden" name="filter[users][]" value="<%= u.id %>" />
+	<% end %>
+ 
+ <% end %>
+  
+</div>
+

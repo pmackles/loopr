@@ -1,0 +1,26 @@
+<div style="float: right">
+	<% form_tag(courses_search_url(), :method => :get, :id => 'navbar-search', :target => '_top') do %>
+		<%= text_field_tag :q, nil, :size => 20, :id => 'navbar-search-q', :class => 'search-dimmed-text' %>
+		<%= submit_tag "Search", :name => nil, :id => 'navbar-search-btn' %>
+	<% end %>
+</div>
+
+<div>
+	<%= link_to "Courses", courses_url %> /
+	<% if controller.action_name == "search" %>
+		<%= link_to "Search", courses_search_url() %>
+	<% elsif controller.action_name == "map" %>
+		<%= link_to "Map", courses_map_url() %>
+	<% else %>
+		<%= link_to "Browse", courses_browse_url(:region => nil) %>
+	<% end %>
+	<% if region %> 
+		/ <%= link_to h(region), courses_browse_url(:region => region, :subdivision => nil, :city => nil) %>
+		<% if subdivision %> 
+			/ <%= link_to h(subdivision), courses_browse_url(:region => region, :subdivision => subdivision, :city => nil) %>
+			<% if city %> 
+				/ <%= link_to h(city), courses_browse_url(:region => region, :subdivision => subdivision, :city => city) %>
+			<% end %>
+		<% end %>
+	<% end %>
+</div>

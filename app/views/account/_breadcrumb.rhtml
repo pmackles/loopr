@@ -1,0 +1,9 @@
+<h2 class="breadcrumb">
+	<%= link_to "Your Loopr", :action => 'blog', :controller => 'user', :id => current_user %> / 
+    <%= link_to "Settings", :controller => 'account', :action => 'settings' %>   
+    <% if defined? trail %>
+	    <% unless trail.nil? || trail.empty? %>
+			/ <%= trail.join(" / ") %>
+		<% end %>
+	<% end %>	
+</h2>

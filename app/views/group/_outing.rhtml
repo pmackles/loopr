@@ -1,0 +1,54 @@
+<div class="header">
+	<%= outing.date_played.to_formatted_s :mmddyyyy %>
+</div>
+
+<div style="margin: 0 0 8px 0 ;font-size: 12px">
+	<strong>Course</strong>: <%= link_to outing.course_name,  course_url(:id => outing.course_id, :name => outing.course_name) %><br />
+	<strong>Holes</strong>: <%= outing.total_holes %><br />
+</div>
+					
+<div>
+	<% @outings[outing].each_with_index do |r, i| %>
+		<div style="">
+			<div style="float: left">
+				<%= user_icon_medium r.user_icon_url %>
+			</div>
+								
+			<div style="margin-left: 58px;">
+				<%= link_to(
+							display_name(:login => r.user_login, :source => r.user_source, :facebook_name => r.user_facebook_name), 
+							blog_url(:id => r.user_id)
+				) %><br />
+
+				<div class="score-container">
+					<strong>Score</strong>
+					<div class="score"><%= link_to r.total_score, :controller => :round, :action => :show, :id => r %></div>
+				</div>
+				
+				<div style="font-size: 11px;">
+					<strong>Course Handicap</strong>: <%= r.course_handicap %><br />
+					<strong>Net Score</strong>: <%= r.net_score || na %>
+				</div>
+	    	<% unless r.comments.blank? %>
+					<span class="start-quote">
+						<span class="end-quote"><%= sanitize(r.comments)  %></span>
+					</span>
+				<% end %>					
+			</div>
+		</div>
+		<br clear="left" />
+	<% end %>
+</div>
+
+<% if @outings[outing].size > 1 %>
+	<div style="float: right">
+		<%= link_to "Compare Rounds", :controller => :rounds, :action => :compare, :rounds => @outings[outing].collect { |r| r.id }.join(",") %>
+	</div>
+	<br clear="right" />
+<% end %>
+
+
+
+
+
+

@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html>
+
+	<%= render :partial => 'layouts/head2' %>
+
+	<body id="standard<%= '-logged-in' if logged_in? %>">
+		
+		<!-- HACK: make sure that the redbox overlay covers whole screen -->
+		<div></div>
+		
+		<%= render :partial => 'layouts/login_menu' %>
+		<%= render :partial => 'layouts/navbar' %>
+   		
+   	<br />
+		<div id="mainShell">
+			<div style="">
+
+
+<% if admin? %>
+	<div style="text-align: right; margin-bottom: 10px;"><strong>Admin:</strong> <%= link_to "Add Course", :controller => :course, :action => :new %></div>
+<% end %>
+			
+				<div>					
+
+					<%= render :partial => 'courses/search_form', :locals => { :region => @course.address.region, :subdivision => @course.address.state, :city => @course.address.city } %>
+
+					<div id="title">
+						<h1><%= yield :title %></h1>
+					</div>
+
+<div class="clearfix">
+	<div class="toolbar" style="float: right">
+		<%= render :partial => "saved_course/add_course_button", :object => @saved_course %>
+		<%= image_tag "icons/edit.gif" %> <%= post_round_for_course_link @course, "Post Round" %>
+	</div>
+
+
+					<div id="tabmenu">
+						<ul>
+						    <li><%= link_to("Overview", course_url(@course), 
+						    				:id => (yield(:current_tab) == "overview" ? "current" : "overview")) %></li>
+						    <li><%= link_to("Rounds", 
+						    				{:controller => 'course', :action => 'rounds', :id => @course},
+						    				:id => (yield(:current_tab) == "rounds" ? "current" : "rounds")) %></li>
+					    </ul>
+					</div>
+</div>					
+					<%= @content_for_layout %>
+				</div>
+
+			</div>
+
+  		<br clear="all" />
+ 		</div>
+
+		<%= render :partial => 'layouts/footer' %>
+  
+	</body>
+</html>

@@ -1,0 +1,12 @@
+<div id="title">
+	<h1>
+   		<% @breadcrumb.each_with_index { |n, i| %>
+   			<%= "/" unless i == 0 %>
+   			<% if n[:url] %>
+   				<%= link_to_unless_current n[:label], n[:url] %>
+   			<% else %>
+   				<%= n[:label] %>
+   			<% end %>
+   		<% } %>
+   	</h1>
+</div>

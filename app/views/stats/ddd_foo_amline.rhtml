@@ -1,0 +1,382 @@
+<% title username(@user, :possessive => true) + " Game: Stats (#{@left.label})" %>
+<% current_tab "stats" %>
+
+<style>
+#reports, #flashcontent, #amline, #compare {
+ zoom: 1;
+}
+
+#reports.disabled, form.disabled, tr.disabled {
+ opacity : 0.2;
+ filter: alpha(opacity=20);
+}
+
+#chart-top {
+ margin-left: 38px;
+}
+
+#legend-header {
+ height: 20px;
+ padding: 3px 4px 3px 22px;
+ font-weight: bold;
+}
+
+#legend-header.expand {
+ background: #FFFFFF url(/images/button_n_arrow_down.gif) no-repeat scroll 5px center; 
+}
+
+#legend-header.minimize {
+ background: #FFFFFF url(/images/button_n_arrow_up.gif) no-repeat scroll 5px center; 
+}
+
+#legend-form-wrapper {
+ width: 200px; 
+ padding: 5px 10px; 
+ font-size: 10px;
+}
+
+#legend {
+ border-collapse: collapse;
+ border: 1px solid #ffffff;
+ background-color: #ffffff;
+}
+
+#legend.highlight {
+ border: 1px solid #a7a7a7;
+}
+
+</style>
+					
+<p style="font-size: 11px">
+ &laquo; <%= link_to_unless((controller.action_name == "summary"), "Stat Summary", stats_url(:id => @user)) %>
+</p>
+ 
+<h2><%= @left.label %></h2>
+
+<div style="margin-top: 15px">
+	<span id="load-progress" style="display: none">
+		<%= image_tag "indicator_kit.gif", :align => 'top', :width => '48', :height => '16' %> Loading rounds...
+	</span>
+
+	<div id="load-summary" style="display: inline; font-style: italic">
+		<% if @rounds.length == 0 %>
+			No rounds to graph. Try increasing the time period and/or selecting "All Courses"
+		<% else %>
+			<%= @rounds.length %> rounds
+		<% end %>
+	</div>
+</div>
+
+<div id="reports" style="margin-top: 15px; border-top: solid 1px #a7a7a7; border-bottom: solid 1px #a7a7a7; padding-top: 10px">
+	<div id="flashcontent">
+  	<strong>You need to upgrade your Flash Player</strong>
+	</div>
+</div>
+
+<div id="reports" style="margin-top: 15px;">
+	<table style="width: 600px">
+		<tr>
+			<th>Date</th>
+			<th>Course</th>
+			<th style="text-align: right"><%= @left.label %></th>
+			<th style="text-align: right">Total Score</th>
+		</tr>
+		
+		<% @rounds.each do |r| %>
+			<tr>
+				<td><%= r.date_played.to_formatted_s :Beyyyy %></td>
+				<td><%= r.course.name %></td>
+				<td align="right"><%= r.send(@left.name.to_s + "_formatted") %></td>
+				<td align="right"><%= r.total_score %></td>
+			</tr> 
+		<% end %>
+	</table>
+</div>
+
+
+<script type="text/javascript">
+		
+		function highlight() {
+			$('legend').addClassName("highlight");
+		}
+		
+		function lowlight() {
+			if (!$('legend-form-wrapper').visible()) {
+				$('legend').removeClassName("highlight");
+			}
+		}
+				
+		function showCompareForm() {
+			$('legend-form-wrapper').toggle();
+			if ($('legend-form-wrapper').visible()) {
+				$('legend-header').removeClassName('expand');
+				$('legend-header').addClassName('minimize');
+			} else {
+				$('legend-header').addClassName('expand');
+				$('legend-header').removeClassName('minimize');
+			}
+			return false;
+		}
+		
+		function leftColMetric() {
+			var r = Form.getInputs("legend-form", "radio", "left").find(function(radio) { return radio.checked; });
+			return r.value;
+		}
+		
+		function rightColMetric() {
+		  return "none";
+		}
+
+    
+    function redrawChart() {
+    	console.log("in redrawChart");
+
+    	chart.dataTable = rounds;
+    	chart.yLeftGraph = leftColMetric();
+    	chart.yRightGraph = rightColMetric();
+    	chart.draw();
+    	
+    	console.log("done in redrawChart");
+    }
+
+
+Loopr.LineChart = Class.create();
+Loopr.LineChart.prototype = {
+  
+  initialize: function(chartDiv, titleDiv, dataTable, xGraph, yLeftGraph, yRightGraph) {
+		this.chartDiv = chartDiv;
+		this.titleDiv = titleDiv;
+		this.dataTable = dataTable;
+		this.xGraph = xGraph;
+		this.yLeftGraph = yLeftGraph;
+		this.yRightGraph = yRightGraph;
+    var so = new SWFObject("/amline/amline.swf", "amline", "600", "250", "8", "#a6a6a6");
+    so.addVariable("path", "/amline/");
+    so.addVariable("settings_file", encodeURIComponent("/amline/amline_settings.xml"));
+    so.addVariable("additional_chart_settings", this.settingsAsXml().replace(/\%/, "%25"));
+    so.addVariable("chart_data", this.dataAsXml());
+    so.write(this.chartDiv);
+    this.updateTitle();
+  },
+
+  draw: function() {
+  	console.log("in draw");
+  	
+  	var cx = $('amline');
+  	
+  	this.updateTitle();
+  	cx.setSettings(this.settingsAsXml());		
+		cx.setData(this.dataAsXml());
+		
+		console.log("done in draw");
+  },
+
+		
+	hasValues: function(yGraph) {
+  	for (var i = 0; i < this.dataTable.length; i++) {
+   		if (this.dataTable[i].stats[yGraph] != null) {
+   			return true;
+   		}
+   	}
+   	return false;
+	},
+		
+	updateTitle: function() {
+		// console.log("in kkk");
+		var a = []
+		if (this.yLeftGraph && this.yLeftGraph != "none") {
+			a.push("<span style=\"color: #FAC314\">" + settings[this.yLeftGraph].title + "</span>");
+		}
+			
+		if (this.yRightGraph && this.yRightGraph != "none") {
+			a.push("<span style=\"color: #D84B3C\">" + settings[this.yRightGraph].title + "</span>");
+		}			
+
+		/*
+		if (a.length > 0) {
+			$(this.titleDiv).update(a.join(" vs. "));
+		} else {
+			$(this.titleDiv).update("");
+		}
+		*/
+		
+		// console.log("done in kkk");
+	},
+	
+	blur: function() {
+		var cx = $('amline');
+		cx.setParam("vertical_lines.alpha", 20);
+		cx.setParam("graphs.graph[1].line_alpha", 20);
+		cx.setParam("graphs.graph[1].bullet_alpha", 20);
+	},
+	
+  settingsAsXml: function() {    	
+  	var yRightGraphHasValues = this.hasValues(this.yRightGraph);
+   	var yLeftGraphHasValues = this.hasValues(this.yLeftGraph);
+
+		console.log("in settingsAsXml: yLeftGraph=", this.yLeftGraph, "yLeftGraphHasValues=", yLeftGraphHasValues, "yRightGraphHasValues=", yRightGraphHasValues);
+			
+   	var settings_xml = "<settings><values>";
+		if (yLeftGraphHasValues) {
+			settings_xml += "<y_left><enabled>true</enabled></y_left>"; 
+    	settings_xml += "<y_left><unit>" + settings[this.yLeftGraph].unit + "</unit></y_left>";
+    } else {
+      settings_xml += "<y_left><enabled>false</enabled></y_left>";
+    }
+      
+		if (yRightGraphHasValues) {
+			settings_xml += "<y_right><enabled>true</enabled></y_right>"; 
+    	settings_xml += "<y_right><unit>" + settings[this.yRightGraph].unit + "</unit></y_right>";
+    } else {
+      settings_xml += "<y_right><enabled>false</enabled></y_right>"; 
+    }
+      
+    settings_xml += "</values>";    	
+    	
+    if (!yLeftGraphHasValues && this.yLeftGraph != "none") {
+    	settings_xml += "<labels><label lid='0'><text><![CDATA[Sorry, no data to graph for " + settings[this.yLeftGraph].title + "]]></text></label></labels>";
+    } else {
+    	settings_xml += "<labels><label lid='0'><text><![CDATA[]]></text></label></labels>";
+    }
+
+    if (!yRightGraphHasValues && this.yRightGraph != "none") {
+    	settings_xml += "<labels><label lid='1'><text><![CDATA[Sorry, no data to graph for " + settings[this.yRightGraph].title + "]]></text></label></labels>";
+    } else {
+    	settings_xml += "<labels><label lid='1'><text><![CDATA[]]></text></label></labels>";
+    }
+    
+    if (yLeftGraphHasValues || yRightGraphHasValues) {
+    	settings_xml += "<graphs>";
+    	if (yLeftGraphHasValues) {
+    		settings_xml += "<graph gid='1'><title>" + settings[this.yLeftGraph].title + "</title></graph>";
+    	}
+    	if (yRightGraphHasValues) {
+    		settings_xml += "<graph gid='2'><title>" + settings[this.yRightGraph].title + "</title></graph>";
+    	}    	
+    	settings_xml += "</graphs>";
+    }
+    
+    settings_xml += "</settings>";
+    	
+    // console.log("done in ooo");
+    	 	
+		return settings_xml;
+	},
+
+	dataAsXml: function() {
+		// console.log("in ttt");
+		var xml = "<chart>";
+
+		var series = [];		  
+		var graph_1 = [];
+		var graph_2 = [];
+		if (this.dataTable.length > 0) {
+
+			for (var i = 0; i < this.dataTable.length; i++) {
+				series.push(this.dataTable[i][this.xGraph]);
+				graph_1.push(this.dataTable[i].stats[this.yLeftGraph]);
+				if (this.yRightGraph) {
+					graph_2.push(this.dataTable[i].stats[this.yRightGraph]);
+				}
+	    }
+	  } else {
+	  	console.log("nothing to graph");
+	  	return "<chart><series><value xid='0'> </value></series><graphs><graph gid='1'></graph><graph gid='2'></graph></graphs></chart>";
+	  }
+
+		xml += "<series>";
+		for (var i = 0; i < series.length; i++) {
+			xml += "<value xid='" + i + "'>" + series[i] + "</value>";
+		}
+		xml += "</series>";
+
+		xml += "<graphs>";
+		xml += "<graph gid='1'>";
+		for (var i = 0; i < graph_1.length; i++) {
+			xml += "<value xid='" + i + "' description='" + this.dataTable[i]["course"].replace(/\'/, " ") + "'>" + graph_1[i] + "</value>";
+		}
+		xml += "</graph>";
+		xml += "<graph gid='2'>";
+		for (var i = 0; i < graph_2.length; i++) {
+			xml += "<value xid='" + i + "'>" + graph_2[i] + "</value>";
+		}
+		xml += "</graph>";
+		xml += "</graphs>";
+		xml += "</chart>";
+		
+		console.log(xml);
+		
+    return xml;
+  }  
+}
+
+
+var settings = {};
+<% Round.metrics.each do |m| %>
+  settings.<%= m.name %> = {};
+  settings.<%= m.name %>.title = "<%= m.label %>";
+  settings.<%= m.name %>.unit = "<%= m.percentage? ? "%" : "" %>";
+  settings.<%= m.name %>.min = "0";
+<% end %>
+  settings.none = {};
+  settings.title = "None";
+  settings.unit = "";
+  settings.min = "0";
+  
+		var rounds = <%= @rounds.to_json %>;
+		    
+    var chart = new Loopr.LineChart(
+    	"flashcontent",
+    	"chart-title",
+    	rounds, 
+    	"date_played", 
+    	leftColMetric(), 
+    	rightColMetric()
+    );
+		
+/*
+		$('legend-header').observe("click", showCompareForm);
+		$('legend').observe("mouseover", highlight);
+		$('legend').observe("mouseout", lowlight);
+*/
+
+		function updateData() {		  
+		  new Ajax.Request(
+		  	'/stats/eee/<%= @user.id %>', {
+		  		asynchronous:true, 
+		  		evalScripts:true, 
+		  		onComplete: function(request){ handleSubmitResponse(request); }, 
+		  		onLoading: function(request){ handleSubmit(); }, 
+		  		parameters:Form.serialize('filter')
+		  	}
+		  );
+		  
+		}
+		
+		function handleSubmit() {
+			$('load-progress').show();
+			$('load-summary').hide();
+			
+			chart.blur();
+		}
+		
+		function handleSubmitResponse(request) {
+    	// console.log("in handleSubmitResponse()");
+			rounds = eval('(' + request.responseText + ')');
+
+			var load_summary = "";
+			if (rounds.length > 0 ) {
+				load_summary = rounds.length + " rounds";				
+			} else {
+				load_summary = "No rounds to graph. Try increasing the time period and/or selecting \"All Courses\"";
+			}			
+			$("load-summary").update(load_summary);
+
+    	redrawChart();
+	
+			$('load-progress').hide();
+			$('load-summary').show();
+		}
+
+
+</script>

@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html>
+
+	<%= render :partial => 'layouts/f8/head' %>
+
+	<body>
+		
+		<!-- HACK: make sure that the redbox overlay covers whole screen -->
+		<div></div>
+		
+		<div class="dashboard_header">
+			<%= render :partial => 'layouts/f8/navbar' %>
+		</div>
+   		
+   	<br />
+		<div>
+			<div style="">
+			
+				<div>										
+					<% unless controller.action_name == "index" %>
+						<%= render :partial => 'courses/search_form', :locals => { :region => params[:region], :subdivision => params[:subdivision], :city => params[:city] } %>
+					<% end %>
+
+					<div id="title">
+						<h1><%= yield :title %></h1>
+					</div>					
+					<%= @content_for_layout %>
+				</div>
+
+			</div>
+
+  		<br clear="all" />
+ 		</div>
+
+	  <script src="http://static.ak.facebook.com/js/api_lib/v0.4/FeatureLoader.js.php" type="text/javascript"></script>
+	  <script type="text/javascript"> 
+	    window.onload = function() { 
+	      FB_RequireFeatures(["CanvasUtil"], function(){ 
+	        FB.XdComm.Server.init("/xd_receiver.htm"); 
+	        FB.CanvasClient.startTimerToSizeToContent(); 
+	      }); 
+	    }; 
+	  </script>
+	  
+		<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+		<script type="text/javascript">
+		_uacct = "UA-801600-1";
+		urchinTracker();
+		</script>
+  
+	</body>
+</html>

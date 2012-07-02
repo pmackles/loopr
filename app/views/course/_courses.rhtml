@@ -1,0 +1,28 @@
+<p>
+	<% if @courses.any? %>
+		<% if @too_many %>			
+			Over <%= pluralize @courses.size, "match" %> for <b><%= h @value %></b>. 
+			<span style="background-color: yellow">You might need to be more specific.</span>
+	
+		<% else %>
+			<%= pluralize @courses.size, "match" %> for <b><%= h @value %></b>
+		<% end %>
+	<% else %>
+		<% unless @value.blank? %>
+			Sorry, no matches for <b><%= h @value %></b>.
+			<span style="background-color: yellow">Try using fewer, more specific, words</span>
+		<% end %> 
+	<% end %>
+</p>
+	
+<div id="course-picker-list">
+	<ul class="plainList">
+		<% @courses.each do |c| -%>
+		  	<li>
+		  		<%= link_to_function "#{c.name} - #{c.address.to_formatted_s :really_short}", "#{h params[:cb]}(#{c.id}); RedBox.close()" %>
+		  	</li>
+		 <% end -%>
+	</ul>
+</div>
+
+

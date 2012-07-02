@@ -1,0 +1,29 @@
+<% title "Widgets" %>
+<% supress_ads %>
+
+<div>
+
+	<p>
+	Cut-n-paste the html hown below into your blog's template. You should see the stats widget in its
+	place when you view your blog. The exact details vary per blogging system but most all should allow
+	for this type of widget insertion. If you're having problems, I'd be glad to help, send questions to 
+	<%= mail_to "feedback@loopr.com", nil, :encode => "javascript" %>
+	</p>
+
+	<div style="margin-bottom: 10px;">
+	<textarea cols="70"><script src="<%= widget_stats_url :username => @user.login, :only_path => false %>"></script></textarea>
+	</div>
+
+	<div style="width: 125px; float: left;">
+		<script src="<%= widget_stats_url :username => @user.login, 
+										  :only_path => false %>">
+		</script>
+	</div>
+	
+	<div style="margin-left: 130px;">
+		<%= render :partial => "#{params[:id]}_instructions" %>
+	</div>
+
+	<br clear="all" />
+
+</div>

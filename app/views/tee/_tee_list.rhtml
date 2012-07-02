@@ -1,0 +1,39 @@
+<div id="tee-list">
+	<% if @course.tees.any? %>
+		<table>
+	
+			<tr>
+				<th>Name</th>
+				<th>Type</th>
+				<th>Rating/Slope</th>
+				<th>Par</th>
+				<th>Length</th>
+			</tr>
+			
+			<% @course.tees.each do |t| %>
+				<tr>
+					<td>
+						<%= t.name %>
+					</td>
+					<td><%= score_type t %></td>
+					<td><%= t.mens_rating %>/<%= t.mens_slope %></td>
+					<td><%= t.par %></td>
+					<td><%= t.yardage %></td>
+					<% if edit_mode %>
+			  			<td>
+							<%= link_to_remote("delete", :update => 'tee-list',
+														 :confirm => "Sure you want to delete the #{t.name} tees?",
+														 :url => {
+														 	:controller => 'tee',
+															:action => 'destroy',
+															:id => t
+														 }) %>
+						</td>
+					<% end %>
+				</tr>
+			<% end %>
+		</table>
+	<% else %>
+		<i>No tees yet</i>
+	<% end %>
+</div>

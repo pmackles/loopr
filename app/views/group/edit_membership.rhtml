@@ -1,0 +1,39 @@
+<% title "Edit Membership" %>
+<% current_tab "settings" %>
+
+<h2>Edit Group Membership</h2>
+
+<div class="subSection">
+
+	<%= error_messages_for 'group' %>
+
+  <% form_for(:group, @group, :url => { :action => :edit_membership, :id => @group }) do |f| %>
+		<table border="0" cellspacing="0" cellpadding="5">
+			<tr>
+				<td></td>
+				<td><b>Admin</b></td>
+			</tr>
+			<% @group.memberships.each_with_index { |m, i| @membership = m %>
+				<tr style="background-color: <%= cycle("rgb(230, 230, 230);", "white") %>">
+					<td><b><%= display_name(m.user) %></b></td>
+					<td>
+					<% if m.role == Group::CREATE_ROLE %>
+						Yes (Creator)
+					<% else %>
+						<%= check_box "membership[]", "role" %>
+					<% end %>
+					</td>
+				</tr>
+			<% } %>
+			<tr>
+				<td></td>
+				<td><%= submit_tag "Save" %></td>
+			</tr>
+		</table>
+	<% end %>
+
+	<p>
+		<%= link_to("Return to main admin page", :action => :settings, :id => @group) %>
+	</p>
+	
+</div>

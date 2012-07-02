@@ -1,0 +1,32 @@
+<% title "Your Settings" %>
+<% supress_ads %>
+
+<% if @flash[:notice] -%>
+  <div class="importantMessage"><%= @flash[:notice] %></div>
+<% end -%>
+	
+<div id="columnLeft">
+	<%= render(:partial => 'settings_menu') %>
+</div>
+
+<div id="columnRight">
+<p>
+	Use the links to the left to update your account settings.
+</p>
+
+<p>
+	<strong>Your personalized LOOPR.com url is</strong>: 
+	<%= link_to nil, :controller => @user.login, :only_path => false %>
+</p>
+
+<p>
+	<strong>Do you have your own blog?</strong> Check out our
+	new 
+	<%= link_to "personalized widgets", 
+				:controller => 'widget', 
+				:action => 'preview' %> 
+	that are a gimme to add to your blog's sidebar.
+</p>
+
+
+</div>

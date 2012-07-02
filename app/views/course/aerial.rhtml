@@ -1,0 +1,27 @@
+<% title "#{@course.short_name} - Aerial" %>
+<div>
+    <div id="map"><div class="loading">Loading...</div></div>
+</div>
+
+<%= gmaps_javascript_include %>
+<%= javascript_include_tag "maputils" %>
+	
+<script type="text/javascript">
+  var params = location.search.parseQuery();
+  var lat = params.lat || <%= @latitude %>;
+  var lng = params.lng || <%= @longitude %>;
+
+  var map = initializeMap(new GLatLng(lat, lng), 16, null, true);
+
+  var panel = new BpControl(legendHtml(), new GSize(10, 20), G_ANCHOR_BOTTOM_RIGHT, 'coursePanel');
+  map.addControl(panel);
+  panel.show();
+
+  function legendHtml() {
+	var legend = "<%= content_tag :h3, escape_javascript(@course.name) %>";
+	legend += '<%= escape_javascript(vcard(@course.name, @course)) %>';
+	legend += '<p><%= link_to "Back To Course Page", :controller => 'course', :action => 'show', :id => @course %></p>';
+	return legend;
+  }
+   
+</script>
